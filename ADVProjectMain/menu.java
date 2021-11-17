@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.util.Random;
 
 public class  menu extends JFrame{
+    int rows;
+    int columns;
     
     menu() {
     int dif = 1;
@@ -19,7 +21,6 @@ public class  menu extends JFrame{
 
     //f.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
-    int rows;
     if (dif == 0) {
         rows = 8;
     }
@@ -27,7 +28,7 @@ public class  menu extends JFrame{
         rows = 14;
     }
     else rows = 20;
-    int columns = (rows + 2);
+    columns = (rows + 2);
     Random rand = new Random();
         
         //Randomly generate mines in set size
@@ -52,6 +53,7 @@ public class  menu extends JFrame{
 }
     public static void main(String[] args) {
         new menu();
+        new field();
         
     }    
 }
