@@ -28,28 +28,42 @@ public class  menu extends JFrame{
         rows = 14;
     }
     else rows = 20;
+
     columns = (rows + 2);
     Random rand = new Random();
         
         //Randomly generate mines in set size
     
-        int m = 0;
+
         int [][] mine = new int[rows][columns];
+        int m;
+        double r = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                double r = rand.nextDouble();
-                if (r < rows/10) m = 1;
+                r = rand.nextDouble();
+                if (r <= 0.2) m = 1;
                 else m = 0;
-            
                 mine[i][j] = m; 
+            
             }
+            
         }
-        for (int i = 0; i < rows; i++) {
+
+        for (int[] rows: mine) {
+            if(rows != null) {
+                for( int cols: rows) {
+                    System.out.print(cols + " ");
+                }
+            }
+            System.out.println();
+        }
+       /* for (int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 System.out.print(mine[i][j]);
             }
         System.out.println();
         }
+        */
 }
     public static void main(String[] args) {
         new menu();
