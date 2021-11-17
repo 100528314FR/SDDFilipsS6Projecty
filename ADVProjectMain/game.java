@@ -1,15 +1,26 @@
 package ADVProjectMain;
 
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.event.*;
 
 public class game {
+
+    public static void main(String[] args) {
+
+        new game();  
+    } 
+
+   // game game = new game();
+
     int rows = menu.rows;
     int columns = menu.columns;
 
-    public Field() {
+    public void field() {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -42,15 +53,15 @@ public class game {
                     Border b = null;
                     if(i < rows - 1) {
                         if(j < columns - 1) {
-                            b = new MatteBorder(1, 1, 0, 0, color.GRAY);
+                            b = new MatteBorder(1, 1, 0, 0, Color.GRAY);
                         } else {
-                            b = new matteBorder(1, 1, 0, 0, color.GRAY);
+                            b = new MatteBorder(1, 1, 0, 0, Color.GRAY);
                         }
                     } else  {
                         if(j < columns - 1) {
-                            b = new MatteBorder(1, 1, 0, 0, color.GRAY);
+                            b = new MatteBorder(1, 1, 0, 0, Color.GRAY);
                         } else {
-                            b = new matteBorder(1, 1, 0, 0, color.GRAY);
+                            b = new MatteBorder(1, 1, 0, 0, Color.GRAY);
                     }
                 }
                 cp.setBorder(b);
@@ -60,24 +71,25 @@ public class game {
     }
 }
 
-public class cells extends JPanel {
+public class CellPane extends JPanel {
 
     private Color defaultBackground;
 
-    public cells() {
-        addMouseListner(new MouseAdapter() {
-            public void mouseOn(MouseEvent e) {
+    public CellPane() {
+        addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
                 defaultBackground = getBackground();
                 setBackground(Color.WHITE);
             }
-
-            public void mouseOff(MouseEvent e) {
+            @Override
+            public void mouseExited(MouseEvent e) {
                 setBackground(defaultBackground);
             }
         });
     }
-        public size getPreferedSize() {
-            return new size(50,50);
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(50,50);
         }
     }
 }

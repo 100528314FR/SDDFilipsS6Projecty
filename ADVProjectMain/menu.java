@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.util.Random;
 
 public class  menu extends JFrame{
-    int rows;
-    int columns;
+    static int rows;
+    static int columns;
     
     menu() {
     int dif = 1;
@@ -53,7 +53,7 @@ public class  menu extends JFrame{
 }
     public static void main(String[] args) {
         new menu();
-        new field();
+        new game();
         
     }    
 }
