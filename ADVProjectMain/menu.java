@@ -1,4 +1,3 @@
-package ADVProjectMain;
 
 import javax.swing.*;
 import java.util.Random;
@@ -41,7 +40,7 @@ public class  menu extends JFrame{
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 r = rand.nextDouble();
-                if (r <= 0.2) m = 1;
+                if (r <= 0.3) m = 1;
                 else m = 0;
                 mine[i][j] = m; 
             
@@ -57,17 +56,12 @@ public class  menu extends JFrame{
             }
             System.out.println();
         }
-       /* for (int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                System.out.print(mine[i][j]);
-            }
-        System.out.println();
-        }
-        */
+
+
 }
     public static void main(String[] args) {
         new menu();
-        new game();
+        new grid();
         
     }    
 }
