@@ -1,57 +1,35 @@
 package ADVProjectMain;
 
 import javax.swing.*;
-import java.util.Random;
 
-public class  menu extends JFrame{
+public class menu extends JFrame{
+
+    static int rows;
+    static int columns;
+    static int[][] mine;
     
-    menu() {
+    public menu() {
     int dif = 1;
     JFrame f = new JFrame();
-    Object[] options = {"Easy", "Medium", "Hard"};
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    Object[] options = {"Hard", "Medium", "Easy"};
     dif = JOptionPane.showOptionDialog(null, "Select a difficulty", "Difficulty",
           JOptionPane.YES_NO_CANCEL_OPTION,
           JOptionPane.QUESTION_MESSAGE,
           null,
           options, 
           options[1] );
-
-
-    //f.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-
-    int rows;
-    if (dif == 0) {
+    if (dif == 2) {
         rows = 8;
     }
     else if (dif == 1) {
         rows = 14;
     }
     else rows = 20;
-    int columns = (rows + 2);
-    Random rand = new Random();
-        
-        //Randomly generate mines in set size
-    
-        int m = 0;
-        int [][] mine = new int[rows][columns];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                double r = rand.nextDouble();
-                if (r < rows/10) m = 1;
-                else m = 0;
-            
-                mine[i][j] = m; 
-            }
-        }
-        for (int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                System.out.print(mine[i][j]);
-            }
-        System.out.println();
-        }
-}
+    columns = (rows + 4);
+    }
     public static void main(String[] args) {
         new menu();
-        
+        new grid();
     }    
 }
