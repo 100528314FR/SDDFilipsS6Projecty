@@ -17,10 +17,11 @@ public class grid {
 
     public grid() {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(700, 600);
         p.setLayout(new GridLayout(rows, columns));
         addButtons();
         f.add(p);
+        f.pack();
+        f.setLocationRelativeTo(null);
         f.setVisible(true);
     }
 
@@ -73,11 +74,14 @@ public class grid {
                 
                 if (minef[i][j] == 9) {
                     buttons[i][j] = new JButton(9+" ");
+                    buttons[i][j].setPreferredSize(new Dimension(50, 50));
                 } else {
                     buttons[i][j] = new JButton(count[i][j]+" ");
+                    buttons[i][j].setPreferredSize(new Dimension(50, 50));
                 }
                 
                 p.add(buttons[i][j]);
+                
             }
         }   
     }

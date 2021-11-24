@@ -20,9 +20,9 @@ public class  menu extends JFrame{
         rows = 8;
     }
     else if (dif == 1) {
-        rows = 14;
+        rows = 12;
     }
-    else rows = 20;
+    else rows = 14;
 
     columns = (rows + 4);
     }
