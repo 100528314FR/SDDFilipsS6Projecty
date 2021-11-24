@@ -11,12 +11,12 @@ public class grid {
     JPanel p = new JPanel();
     JButton[][]buttons = new JButton[rows][columns];
     
+    int[][] minef = new int[rows][columns];
     int[][] count = new int[rows][columns];
 
 
     public grid() {
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setSize(700, 600);
         p.setLayout(new GridLayout(rows, columns));
         addButtons();
@@ -24,9 +24,8 @@ public class grid {
         f.setVisible(true);
     }
 
-public class mines {
     public int[][] mineGen() {
-            int[][] minef = new int[rows][columns];
+            
             int m;
             double r = 0;
             Random rand = new Random();
@@ -42,16 +41,21 @@ public class mines {
         }
     
         public int[][] counts() {
-            int num = 1;
+            
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
+                        int num = 0;
                         if (minef[i][j] != 9) {
-                            for (int a = i - 1; a < i + 1; a++) {
-                                for (int b = j + 1; b < j - 1; b++) {
+                            try {
+                            for (int a = i - 1; a < i + 2; a++) {
+                                for (int b = j - 1; b < j + 2; b++) {
                                     if (minef[a][b] == 9) {
                                         num = num+1;
-                                }   
-                            }
+                                    }   
+                                }
+                            } 
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                        continue;    
                         }
                     }
                     count [i][j] = num;
@@ -59,9 +63,11 @@ public class mines {
             }
             return count;
         }
-}    
+   
     
     public void addButtons() {
+        mineGen();
+        counts();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 
@@ -76,7 +82,3 @@ public class mines {
         }   
     }
 }
-
-
-
-
