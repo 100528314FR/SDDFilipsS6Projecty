@@ -1,19 +1,22 @@
+
+import javax.imageio.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 
-public class grid {
+public class grid  {
     
     int rows = menu.rows;
     int columns = menu.columns;
-    
+    boolean[][] rev = new boolean[rows][columns];
+
     JFrame f = new JFrame();
     JPanel p = new JPanel();
     JButton[][]buttons = new JButton[rows][columns];
     
     int[][] minef = new int[rows][columns];
     int[][] count = new int[rows][columns];
-
 
     public grid() {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,12 +74,52 @@ public class grid {
         counts();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                
+                final int I = i;
+                final int J = j;
+                //Icon test = new ImageIcon("C:\\gaming_SpriteSheet.jpg");
                 if (minef[i][j] == 9) {
-                    buttons[i][j] = new JButton(9+" ");
+                    buttons[i][j] = new JButton();
+                    try {
+                        Image img = ImageIO.read(getClass().getResource("X.jpg"));
+                        buttons[i][j].setIcon(new ImageIcon(img));
+                       } catch (Exception ex) {
+                        System.out.println(ex);
+                       }
+                    buttons[i][j].addActionListener( new ActionListener() {    
+                        
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                Image img = ImageIO.read(getClass().getResource("9.jpg"));
+                                buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                System.out.println(ex);
+                               }
+                        }
+                    });
+
+                    
                     buttons[i][j].setPreferredSize(new Dimension(50, 50));
                 } else {
-                    buttons[i][j] = new JButton(count[i][j]+" ");
+                    buttons[i][j] = new JButton();
+                    try {
+                        Image img = ImageIO.read(getClass().getResource("X.jpg"));
+                        buttons[i][j].setIcon(new ImageIcon(img));
+                       } catch (Exception ex) {
+                        System.out.println(ex);
+                       }
+                    buttons[i][j].addActionListener( new ActionListener() {    
+                        
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                Image img = ImageIO.read(getClass().getResource(count[I][J]+".jpg"));
+                                buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                System.out.println(ex);
+                               }
+                        }
+                    });
+
+                    
                     buttons[i][j].setPreferredSize(new Dimension(50, 50));
                 }
                 
@@ -85,4 +128,23 @@ public class grid {
             }
         }   
     }
+    /*public class input implements ActionListener {
+    public input() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (minef[i][j] == 9) {
+                    buttons[i][j].addActionListener(this);
+                } else {
+                    buttons[i][j] = new JButton(count[i][j]+" ");
+                    buttons[i][j].setPreferredSize(new Dimension(50, 50));
+                }
+            }
+        }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        
+    } */
 }
+
