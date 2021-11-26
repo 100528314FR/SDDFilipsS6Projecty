@@ -1,7 +1,9 @@
 import javax.swing.*;
+import java.util.*;
+import java.util.Timer;
 
 public class  menu extends JFrame{
-    static int rows;
+    static int rows = 1;
     static int columns;
     
     public menu() {
@@ -22,13 +24,16 @@ public class  menu extends JFrame{
     else if (dif == 1) {
         rows = 12;
     }
-    else rows = 14;
-
+    else if (dif == 2) {
+        rows = 14;
+    }
     columns = (rows + 4);
     }
     public static void main(String[] args) {
         new menu();
+        if (rows >= 8) {
         new grid();
+        }
     }
 }
 
