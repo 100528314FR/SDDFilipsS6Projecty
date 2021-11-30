@@ -75,7 +75,9 @@ public class win {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
                         int num = 0;
-                        if (minef[i][j] != 9) {
+                        if (minef[i][j] == 9) {
+                            num = 9;
+                        } else {
                             try {
                             for (int a = i - 1; a < i + 2; a++) {
                                 for (int b = j - 1; b < j + 2; b++) {
@@ -85,7 +87,7 @@ public class win {
                                 }
                             } 
                         } catch (ArrayIndexOutOfBoundsException e) {
-                        continue;    
+                        continue; 
                         }
                     }
                     count [i][j] = num;
@@ -94,7 +96,17 @@ public class win {
             return count;
         }
    
-    
+       /*  public static void emptyRecu(boolean[][] revealed) {
+            if (revealed[I][J] == true){
+            for (int a = I - 1; a < I + 2; a++) {
+                for (int b = J - 1; b < J + 2; b++) {
+                    
+                    revealed[a][b] = true;
+                    
+                }
+                }
+            }
+        } */
     public void addButtons() {
         mineGen();
         counts();
@@ -102,8 +114,8 @@ public class win {
             for (int j = 0; j < columns; j++) {
                 final int I = i;
                 final int J = j;
-                //mines
-                if (minef[i][j] == 9) {
+                //if its a mine
+                if (count[i][j] == 9) {
                     buttons[i][j] = new JButton();
                     try {
                         Image img = ImageIO.read(getClass().getResource("X.png"));
@@ -128,12 +140,18 @@ public class win {
                                     System.out.println(ex);
                                }
                             } else {
+                                for (int i = 0; i < rows; i++) {
+                                    for (int j = 0; j < columns; j++) {
+                                if (count[i][j] == 9) {
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
-                                    buttons[I][J].setIcon(new ImageIcon(img));
+                                    Image img = ImageIO.read(getClass().getResource("9.png"));
+                                    buttons[i][j].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
                                 }
+                            }
+                            }
+                        }
                                 //new gameOver();
                             }       
                             try {
@@ -146,7 +164,9 @@ public class win {
                         }
                     });
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
-                } else {
+                } 
+                // if its not a mine
+                else {
                     buttons[i][j] = new JButton();
                     try {
                         Image img = ImageIO.read(getClass().getResource("X.png"));
@@ -161,48 +181,55 @@ public class win {
                         public void mousePressed(MouseEvent e) {
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
-                            revealed[I][J] = true;
-                            for (int a = I - 1; a < I + 2; a++) {
-                                    for (int b = J - 1; b < J + 2; b++) {
-                                        if(count[I][J] == 0)  {                        
-                               
-                                        revealed[a][b] = true;
-                                }
-                            
-                                 if (revealed[I][J] == true || revealed[a][b] == true && minef[a][b] != 9) {
-                                if(SwingUtilities.isRightMouseButton(e)) {
-                                    try {
-                                        Image img = ImageIO.read(getClass().getResource("F.jpg"));
-                                        buttons[I][J].setIcon(new ImageIcon(img));
-                                   } catch (Exception ex) {
-                                        System.out.println(ex);
-                                   }
-                                } else {
-                                if(minef[a][b] == 9) {
-                                    
-                                }
-                                if(count[a][b] == 0) {
+
+                            if(SwingUtilities.isRightMouseButton(e)) {
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource(count[a][b]+".png"));
-                                    buttons[a][b].setIcon(new ImageIcon(img));
-                               } catch (Exception ex) {
-                                    System.out.println(ex);
-                               }
-                      
-                               
-                            } else {
-                                try {
-                                    Image img = ImageIO.read(getClass().getResource(count[I][J]+".png"));
+                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
                                }
                             }
+                            else if(count[I][J] == 0) {
+                                revealed[I][J] = true;
+                                
+                                if (revealed[I][J] == true){
+                                for (int a = I - 1; a < I + 2; a++) {
+                                    for (int b = J - 1; b < J + 2; b++) {
+                                        
+                                        revealed[a][b] = true;
+                                        
+                                    }
+                                    }
+                                }
+                            
+                                for(int i = 0; i < rows; i++) {
+                                    for(int j = 0; j < columns; j++) {                                                
+                                        if (revealed[i][j] == true) {
+                                                    try {
+                                                        Image img = ImageIO.read(getClass().getResource(count[i][j]+".png"));
+                                                        buttons[i][j].setIcon(new ImageIcon(img));
+                                                   } catch (Exception ex) {
+                                                        System.out.println(ex);
+                                                   }
+                                                   
+                                                }
+                                            }
+                                        }
+                                            
+
+                                    
+                            } else if(count[I][J] > 0 && count[I][J] < 9) {
+                                revealed[I][J] = true;
+                                try {
+                                            Image img = ImageIO.read(getClass().getResource(count[I][J]+".png"));
+                                            buttons[I][J].setIcon(new ImageIcon(img));
+                                       } catch (Exception ex) {
+                                            System.out.println(ex);
+                                       }
                             }
-                            }
-                        }
-                    }
-                        
+                            
+
                          }
                          
                     });
