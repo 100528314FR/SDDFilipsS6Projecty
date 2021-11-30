@@ -102,6 +102,7 @@ public class win {
             for (int j = 0; j < columns; j++) {
                 final int I = i;
                 final int J = j;
+                //mines
                 if (minef[i][j] == 9) {
                     buttons[i][j] = new JButton();
                     try {
@@ -110,30 +111,38 @@ public class win {
                        } catch (Exception ex) {
                         System.out.println(ex);
                        }
-                    buttons[i][j].addActionListener( new ActionListener() {    
+                    buttons[i][j].addMouseListener( new MouseAdapter() { 
+                        boolean[][] revealed = new boolean[rows][columns];   
                         
-                        public void actionPerformed(ActionEvent e) {
+                        public void mouseClicked(MouseEvent me) {
+
+                            buttons[I][J].getModel().setArmed(true);
+                            buttons[I][J].getModel().setPressed(true);
+                            revealed[I][J] = true;
                             
-                            
-                               for (int i = 0; i < rows; i++) {
-                                for ( int j = 0; j < columns; j++) {
-                                    if (minef[i][j] == 9) {
-                                        try {
-                                            Image img = ImageIO.read(getClass().getResource("9.png"));
-                                            buttons[i][j].setIcon(new ImageIcon(img));
-                                           } catch (Exception ex) {
-                                            System.out.println(ex);
-                                           }
-                                    }
+                            if(SwingUtilities.isRightMouseButton(me)) {
+                                try {
+                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
+                                    buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                    System.out.println(ex);
+                               }
+                            } else {
+                                try {
+                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
+                                    buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                    System.out.println(ex);
                                 }
-                            }
+                                //new gameOver();
+                            }       
                             try {
                                 Image img = ImageIO.read(getClass().getResource("T9.png"));
                                 buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                 System.out.println(ex);
                                }
-                               //new gameOver();
+                               
                         }
                     });
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
@@ -145,21 +154,57 @@ public class win {
                        } catch (Exception ex) {
                         System.out.println(ex);
                        }
-                    buttons[i][j].addActionListener( new ActionListener() {    
+                    buttons[i][j].addMouseListener( new MouseAdapter() {    
                         
-                        public void actionPerformed(ActionEvent e) {
-                            numRev++;
-                            if (numRev >= (rows*columns)-numMines) {
-                            try {
-                                Image img = ImageIO.read(getClass().getResource(count[I][J]+".png"));
-                                buttons[I][J].setIcon(new ImageIcon(img));
+                        boolean[][] revealed = new boolean[rows][columns];
+
+                        public void mousePressed(MouseEvent e) {
+                            buttons[I][J].getModel().setArmed(true);
+                            buttons[I][J].getModel().setPressed(true);
+                            revealed[I][J] = true;
+                            for (int a = I - 1; a < I + 2; a++) {
+                                    for (int b = J - 1; b < J + 2; b++) {
+                                        if(count[I][J] == 0)  {                        
+                               
+                                        revealed[a][b] = true;
+                                }
+                            
+                                 if (revealed[I][J] == true || revealed[a][b] == true && minef[a][b] != 9) {
+                                if(SwingUtilities.isRightMouseButton(e)) {
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("F.jpg"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                   } catch (Exception ex) {
+                                        System.out.println(ex);
+                                   }
+                                } else {
+                                if(minef[a][b] == 9) {
+                                    
+                                }
+                                if(count[a][b] == 0) {
+                                try {
+                                    Image img = ImageIO.read(getClass().getResource(count[a][b]+".png"));
+                                    buttons[a][b].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
-                                System.out.println(ex);
+                                    System.out.println(ex);
                                }
-                            } else  if (numRev <= (rows*columns)-numMines) {
-                                new win();
+                      
+                               
+                            } else {
+                                try {
+                                    Image img = ImageIO.read(getClass().getResource(count[I][J]+".png"));
+                                    buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                    System.out.println(ex);
+                               }
+                            }
+                            }
                             }
                         }
+                    }
+                        
+                         }
+                         
                     });
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
                 }
