@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.util.*;
-import java.util.Timer;
+
 
 public class  menu extends JFrame{
     static int rows = 1;
@@ -17,6 +16,11 @@ public class  menu extends JFrame{
           null,
           options, 
           options[1] );
+    String name = "";
+    JLabel l = new JLabel("Enter your name");
+    f.add(l);
+
+
 
     if (dif == 0) {
         rows = 8;

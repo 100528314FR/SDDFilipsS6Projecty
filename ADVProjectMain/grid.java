@@ -11,6 +11,7 @@ public class grid  {
     int columns = menu.columns;
     int numRev = 0;
     int numMines = 0;
+    int flaggedMines = 0;
 
     JFrame f = new JFrame();
     JPanel p = new JPanel();
@@ -78,17 +79,19 @@ public class win {
                         if (minef[i][j] == 9) {
                             num = 9;
                         } else {
-                            try {
+                            
                             for (int a = i - 1; a < i + 2; a++) {
                                 for (int b = j - 1; b < j + 2; b++) {
+                                    try {
                                     if (minef[a][b] == 9) {
                                         num = num+1;
+                                    }
+                                } catch (ArrayIndexOutOfBoundsException e) {
+                                    continue; 
                                     }   
                                 }
                             } 
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                        continue; 
-                        }
+                        
                     }
                     count [i][j] = num;
                 }
@@ -130,36 +133,44 @@ public class win {
 
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
-                            revealed[I][J] = true;
+                            
                             
                             if(SwingUtilities.isRightMouseButton(me)) {
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
+                                    Image img = ImageIO.read(getClass().getResource("F.png"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
+                               }
+                              
+                               if (flaggedMines == numMines) {
+                                   new win();
+                               } else {
+                                flaggedMines++;
                                }
                             } else {
                                 for (int i = 0; i < rows; i++) {
                                     for (int j = 0; j < columns; j++) {
                                 if (count[i][j] == 9) {
+                                    revealed[i][j] = true;
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource("9.png"));
-                                    buttons[i][j].setIcon(new ImageIcon(img));
-                               } catch (Exception ex) {
-                                    System.out.println(ex);
-                                }
-                            }
-                            }
-                        }
-                                //new gameOver();
-                            }       
-                            try {
-                                Image img = ImageIO.read(getClass().getResource("T9.png"));
-                                buttons[I][J].setIcon(new ImageIcon(img));
+                                Image img = ImageIO.read(getClass().getResource("9.png"));
+                                buttons[i][j].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                 System.out.println(ex);
                                }
+                            }
+                            }
+                        }
+                               try {
+                                    Image img = ImageIO.read(getClass().getResource("T9.png"));
+                                    buttons[I][J].setIcon(new ImageIcon(img));
+                               } catch (Exception ex) {
+                                    System.out.println(ex);
+                                } //new gameOver();
+                            } 
+                                    
+                            
                                
                         }
                     });
@@ -179,12 +190,13 @@ public class win {
                         boolean[][] revealed = new boolean[rows][columns];
 
                         public void mousePressed(MouseEvent e) {
+
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
 
                             if(SwingUtilities.isRightMouseButton(e)) {
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource("F.jpg"));
+                                    Image img = ImageIO.read(getClass().getResource("F.png"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
@@ -192,19 +204,23 @@ public class win {
                             }
                             else if(count[I][J] == 0) {
                                 revealed[I][J] = true;
-                                
+                                //if youve revealed a 0, reveal all its neighbors
                                 if (revealed[I][J] == true){
+                                
                                 for (int a = I - 1; a < I + 2; a++) {
                                     for (int b = J - 1; b < J + 2; b++) {
-                                        
-                                        revealed[a][b] = true;
-                                        
-                                    }
+                                        try{    
+                                            revealed[a][b] = true;
+                                        } catch (ArrayIndexOutOfBoundsException er) {
+                                            continue;
+                                        }
                                     }
                                 }
-                            
-                                for(int i = 0; i < rows; i++) {
-                                    for(int j = 0; j < columns; j++) {                                                
+                            }
+                            //go through whole board, printing revealed tiles    
+                            for(int i = 0; i < rows; i++) {
+                                    for(int j = 0; j < columns; j++) {
+                                        try {                                                
                                         if (revealed[i][j] == true) {
                                                     try {
                                                         Image img = ImageIO.read(getClass().getResource(count[i][j]+".png"));
@@ -214,6 +230,9 @@ public class win {
                                                    }
                                                    
                                                 }
+                                            } catch (ArrayIndexOutOfBoundsException err) {
+                                                continue;
+                                            }
                                             }
                                         }
                                             
