@@ -22,6 +22,7 @@ public class  menu extends JFrame{
 
 
 
+
     if (dif == 0) {
         rows = 8;
     }
