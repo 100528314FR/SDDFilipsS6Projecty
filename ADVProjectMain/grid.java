@@ -1,4 +1,3 @@
-
 import javax.imageio.*;
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +19,8 @@ public class grid  {
     int[][] minef = new int[rows][columns];
     int[][] count = new int[rows][columns];
     boolean[][] flagged = new boolean[rows][columns];   
+    boolean[][] revealed = new boolean[rows][columns];
+    int[][] clicked = new int[rows][columns];
     
 
     public grid() { 
@@ -101,17 +102,24 @@ public class win {
             return count;
         }
    
-       /*  public static void emptyRecu(boolean[][] revealed) {
-            if (revealed[I][J] == true){
-            for (int a = I - 1; a < I + 2; a++) {
-                for (int b = J - 1; b < J + 2; b++) {
-                    
-                    revealed[a][b] = true;
-                    
-                }
+        public void reveal() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                final int I = i;
+                final int J = j;
+                for (int a = I - 1; a < I + 2; a++) {
+                    for (int b = J - 1; b < J + 2; b++) {
+                        if(count[a][b] == 0) {
+                            revealed[a][b] = true;
+                            reveal();
+                        } else if(count[a][b] > 0 && count[a][b] < 9) {
+                            revealed[a][b] = true;
+                        }
+                    }
                 }
             }
-        } */
+        }
+       } 
     public void addButtons() {
         mineGen();
         counts();
@@ -201,8 +209,7 @@ public class win {
                        }
                     buttons[i][j].addMouseListener( new MouseAdapter() {    
                         
-                        boolean[][] revealed = new boolean[rows][columns];
-                        int[][] clicked = new int[rows][columns];
+
 
                         public void mousePressed(MouseEvent e) {
  
@@ -220,19 +227,7 @@ public class win {
                             else if(count[I][J] == 0) {
                                 revealed[I][J] = true;
                                 //if you've revealed a 0, reveal all its neighbors
-                                if (revealed[I][J] == true){
-                                
-                                for (int a = I - 1; a < I + 2; a++) {
-                                    for (int b = J - 1; b < J + 2; b++) {
-                                        try{    
-                                            revealed[a][b] = true;
-                                        } catch (ArrayIndexOutOfBoundsException er) {
-                                            continue;
-                                        }
-                                        
-                                    }
-                                }
-                            }
+                                reveal();
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
                             if (clicked[I][J] == 0) {
                                 revealed[I][J] = true;
@@ -305,4 +300,3 @@ public class win {
         }   
     }
 }
-
