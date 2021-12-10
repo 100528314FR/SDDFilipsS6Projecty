@@ -102,24 +102,41 @@ public class win {
             return count;
         }
    
-        public void reveal() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                final int I = i;
-                final int J = j;
-                for (int a = I - 1; a < I + 2; a++) {
-                    for (int b = J - 1; b < J + 2; b++) {
-                        if(count[a][b] == 0) {
-                            revealed[a][b] = true;
-                            reveal();
-                        } else if(count[a][b] > 0 && count[a][b] < 9) {
-                            revealed[a][b] = true;
+        public void reveal(int yPos, int xPos) {
+      //  for (int i = 0; i < rows; i++) {
+      //      for (int j = 0; j < columns; j++) {
+         //       final int I = i;
+         //       final int J = j;
+//         try{
+    if (xPos <0 || xPos > 15 || yPos<0 || yPos > 11) {
+        return;
+    }
+         if(count[yPos][xPos]!=0){
+            System.out.println("revealing xPos = " + yPos + " yPos = " + xPos);
+            revealed[yPos][xPos] = true;
+            return;   
+         } else  {
+           System.out.println("revealing the current tile xPos = " + yPos + " yPos = " + xPos);
+            revealed[yPos][xPos] = true;
+             for (int a = (xPos - 1); a < (xPos + 2); a++) {
+                    for (int b = (yPos - 1); b < (yPos + 2); b++) {
+                      
+                       // System.exit(0);
+                        if(a>=0 && a< 16 && b>=0 && b<12 && a!=xPos && b!=yPos) {
+                            reveal(a, b);
+                        } else {
+                            return;
                         }
                     }
                 }
             }
-        }
-       } 
+             //} catch (ArrayIndexOutOfBoundsException e) {
+              //      System.out.println("aarrgghh!!");
+              //   return;
+             //   }
+           // }
+      //  }
+    }  
     public void addButtons() {
         mineGen();
         counts();
@@ -209,8 +226,6 @@ public class win {
                        }
                     buttons[i][j].addMouseListener( new MouseAdapter() {    
                         
-
-
                         public void mousePressed(MouseEvent e) {
  
                             buttons[I][J].getModel().setArmed(true);
@@ -225,13 +240,17 @@ public class win {
                                }
                             }
                             else if(count[I][J] == 0) {
-                                revealed[I][J] = true;
+                                
+                                
                                 //if you've revealed a 0, reveal all its neighbors
-                                reveal();
+                               // System.out.println("xPos " + I + " yPos " + J);
+                                //System.exit(0);
+                                reveal(I, J);
+
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
                             if (clicked[I][J] == 0) {
-                                revealed[I][J] = true;
-                                
+                                revealed[I][J] = true;  
+
                             }
                                  else  {
                                     for (int a = I - 1; a < I + 2; a++) {
@@ -283,13 +302,7 @@ public class win {
                                             }
                                             }
                                         }
-                             
-                            
-                            
-                            
-
-                         }
-                         
+                         }    
                     });
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
                 }

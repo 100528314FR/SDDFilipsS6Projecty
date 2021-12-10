@@ -33,8 +33,7 @@ public class  menu extends JFrame{
         rows = 14;
     }
     columns = (rows + 4);
-    }
-    public static void main(String[] args) {
+    } public static void main(String[] args) {
         new menu();
         if (rows >= 8) {
         new grid();
