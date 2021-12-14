@@ -108,21 +108,20 @@ public class win {
          //       final int I = i;
          //       final int J = j;
 //         try{
-    if (xPos <0 || xPos > 15 || yPos<0 || yPos > 11) {
+    if (xPos <0 || xPos > rows-1 || yPos<0 || yPos > columns-1) {
         return;
     }
          if(count[yPos][xPos]!=0){
-            System.out.println("revealing xPos = " + yPos + " yPos = " + xPos);
+            System.out.println("revealing xPos = " + xPos + " yPos = " + yPos);
             revealed[yPos][xPos] = true;
             return;   
          } else  {
-           System.out.println("revealing the current tile xPos = " + yPos + " yPos = " + xPos);
+           System.out.println("revealing the current tile xPos = " + xPos + " yPos = " + yPos);
             revealed[yPos][xPos] = true;
              for (int a = (xPos - 1); a < (xPos + 2); a++) {
-                    for (int b = (yPos - 1); b < (yPos + 2); b++) {
-                      
-                       // System.exit(0);
-                        if(a>=0 && a< 16 && b>=0 && b<12 && a!=xPos && b!=yPos) {
+                    for (int b = (yPos - 1); b < (yPos + 2); b++) { 
+                        if(a>=0 && a< rows && b>=0 && b < columns && a!=xPos && b!=yPos) {
+                            revealed[a][b] = true;
                             reveal(a, b);
                         } else {
                             return;
@@ -164,12 +163,13 @@ public class win {
                             
                             
                             if(SwingUtilities.isRightMouseButton(me)) {
-                                try {
+                                  try {
                                     Image img = ImageIO.read(getClass().getResource("F.png"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
-                               }
+                               }  
+                               flagged[I][J] = true;
                                for (int i = 0; i < rows; i++) {
                                 for (int j = 0; j < columns; j++) {
                                     if(count[i][j] == 9) {
@@ -177,30 +177,30 @@ public class win {
                                     } 
                                 }
                             }
-                            flagged[I][J] = true;
-                            
                             if(flaggedM == numMines) {
                                 new win();
                             } else {
                                 flaggedM = flaggedM + 1;
                             }
-                        
-                               
-                            } else {
-                                for (int i = 0; i < rows; i++) {
-                                    for (int j = 0; j < columns; j++) {
-                                if (count[i][j] == 9) {
-                                    revealed[i][j] = true;
+
+                            } else if (flagged[I][J] != true) {
+                                
+                                    for (int i = 0; i < rows; i++) {
+                                        for (int j = 0; j < columns; j++) {
+                                            if (count[i][j] == 9) {
+
+                                                revealed[i][j] = true;
+                                                try {
+                                                    Image img = ImageIO.read(getClass().getResource("9.png"));
+                                                    buttons[i][j].setIcon(new ImageIcon(img));
+                                               } catch (Exception ex) {
+                                                    System.out.println(ex);
+                                                }
+                                                
+                                            }
+                                        }        
+                                }
                                 try {
-                                Image img = ImageIO.read(getClass().getResource("9.png"));
-                                buttons[i][j].setIcon(new ImageIcon(img));
-                               } catch (Exception ex) {
-                                System.out.println(ex);
-                               }
-                            }
-                            }
-                        }
-                               try {
                                     Image img = ImageIO.read(getClass().getResource("T9.png"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
@@ -208,10 +208,8 @@ public class win {
                                 } 
                                 new gameOver();
                             } 
-                                    
-                            
+                            }
                                
-                        }
                     });
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
                 } 
@@ -232,13 +230,11 @@ public class win {
                             buttons[I][J].getModel().setPressed(true);
 
                             if(SwingUtilities.isRightMouseButton(e)) {
-                                try {
-                                    Image img = ImageIO.read(getClass().getResource("F.png"));
-                                    buttons[I][J].setIcon(new ImageIcon(img));
-                               } catch (Exception ex) {
-                                    System.out.println(ex);
-                               }
-                            }
+                                if (flagged[I][J] == true) {
+                                    flagged[I][J] = false;
+                                } else { flagged[I][J] = true;
+                                    }
+                        }
                             else if(count[I][J] == 0) {
                                 
                                 
@@ -248,6 +244,10 @@ public class win {
                                 reveal(I, J);
 
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
+                            if (flagged[I][J] == true) {
+                                return;
+                            }
+                            
                             if (clicked[I][J] == 0) {
                                 revealed[I][J] = true;  
 
@@ -255,19 +255,18 @@ public class win {
                                  else  {
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
+                                          try{   
                                             if(flagged[a][b] == false) {
-                                                try{    
+                                                   
+                                                clicked[a][b] = 1;
                                                 revealed[a][b] = true;
-                                            }  catch (ArrayIndexOutOfBoundsException er) {
+                                            } else if (flagged[a][b] == true) {
+                                        continue;
+                                    }
+                                } 
+                                    catch (ArrayIndexOutOfBoundsException er) {
                                                 continue;
                                         }
-                                    } else if(count[a][b] == 9) {
-                                        if(flagged[a][b] == true) {
-                                            revealed[a][b] = false;
-                                        } else if (flagged[a][b] == false) {
-                                            revealed[a][b] = true;
-                                        }
-                                    }
                                 }
                                 } 
                                     
@@ -277,15 +276,34 @@ public class win {
                             //go through whole board, printing revealed tiles    
                             for(int i = 0; i < rows; i++) {
                                     for(int j = 0; j < columns; j++) {
-                                        try {                                                
+                                        try { 
+                                        if (flagged[i][j] == true) {
+                                            try {
+                                                Image img = ImageIO.read(getClass().getResource("F.png"));
+                                                buttons[I][J].setIcon(new ImageIcon(img));
+                                           } catch (Exception ex) {
+                                                System.out.println(ex);
+                                           }
+                                           return;
+                                        }                                                   
                                         if (revealed[i][j] == true) {
                                             if(count[i][j] == 9) {
+                                                if (clicked[i][j] == 0) {
                                                 try {
-                                                    Image img = ImageIO.read(getClass().getResource(count[i][j]+".png"));
+                                                    Image img = ImageIO.read(getClass().getResource("9.png"));
                                                     buttons[i][j].setIcon(new ImageIcon(img));
                                                } catch (Exception ex) {
                                                     System.out.println(ex);
-                                               }
+                                               } 
+                                            } else if (clicked[i][j] > 0) {
+                                                try {
+                                                    Image img = ImageIO.read(getClass().getResource("T9.png"));
+                                                    buttons[i][j].setIcon(new ImageIcon(img));
+                                               } catch (Exception ex) {
+                                                    System.out.println(ex);
+                                               } 
+                                            }
+
                                                new gameOver();
                                             } else {
                                                     try {
