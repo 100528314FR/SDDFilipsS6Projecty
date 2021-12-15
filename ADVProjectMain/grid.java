@@ -233,9 +233,14 @@ public class win {
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
                                 } else { flagged[I][J] = true;
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("F.png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                   } catch (Exception ex) {
+                                        System.out.println(ex);
+                                   }  
                                     }
-                        }
-                            else if(count[I][J] == 0) {
+                        } else if(count[I][J] == 0) {
                                 
                                 
                                 //if you've revealed a 0, reveal all its neighbors
@@ -250,16 +255,24 @@ public class win {
                             
                             if (clicked[I][J] == 0) {
                                 revealed[I][J] = true;  
-
-                            }
-                                 else  {
+                            }  else  if (clicked[I][J] > 0) {
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
                                           try{   
                                             if(flagged[a][b] == false) {
-                                                   
-                                                clicked[a][b] = 1;
-                                                revealed[a][b] = true;
+                                                
+                                                if (count[a][b] == 9) {
+                                                    for (int i = 0; i < rows; a++) {
+                                                        for (int j = 0; j < columns; b++) {
+                                                            if(count[i][j] == 9) {
+                                                                revealed[i][j] = true;
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    clicked[a][b] = 1;
+                                                    revealed[a][b] = true;
+                                                }
                                             } else if (flagged[a][b] == true) {
                                         continue;
                                     }
@@ -276,16 +289,7 @@ public class win {
                             //go through whole board, printing revealed tiles    
                             for(int i = 0; i < rows; i++) {
                                     for(int j = 0; j < columns; j++) {
-                                        try { 
-                                        if (flagged[i][j] == true) {
-                                            try {
-                                                Image img = ImageIO.read(getClass().getResource("F.png"));
-                                                buttons[I][J].setIcon(new ImageIcon(img));
-                                           } catch (Exception ex) {
-                                                System.out.println(ex);
-                                           }
-                                           return;
-                                        }                                                   
+                                        try {                                                   
                                         if (revealed[i][j] == true) {
                                             if(count[i][j] == 9) {
                                                 if (clicked[i][j] == 0) {
