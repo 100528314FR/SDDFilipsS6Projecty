@@ -103,12 +103,22 @@ public class win {
         }
    
         public void reveal(int yPos, int xPos) {
-      //  for (int i = 0; i < rows; i++) {
-      //      for (int j = 0; j < columns; j++) {
-         //       final int I = i;
-         //       final int J = j;
-//         try{
-    if (xPos <0 || xPos > rows-1 || yPos<0 || yPos > columns-1) {
+            try {
+                
+                for (int a = xPos - 1; a < xPos + 2; a++) {
+                    for (int b = yPos - 1; b < yPos + 2;b++) {
+                        if (count[a][b] != 0) {
+                            revealed[a][b] = true;
+                        } else if (count[a][b] == 0) {
+                            revealed[a][b] = true;
+                            reveal(a, b);
+                        }
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                return;
+            }
+    /* if (xPos <0 || xPos > rows-1 || yPos<0 || yPos > columns-1) {
         return;
     }
          if(count[yPos][xPos]!=0){
@@ -128,13 +138,8 @@ public class win {
                         }
                     }
                 }
-            }
-             //} catch (ArrayIndexOutOfBoundsException e) {
-              //      System.out.println("aarrgghh!!");
-              //   return;
-             //   }
-           // }
-      //  }
+            } */
+             
     }  
     public void addButtons() {
         mineGen();
@@ -232,6 +237,12 @@ public class win {
                             if(SwingUtilities.isRightMouseButton(e)) {
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("X.png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                       } catch (Exception ex) {
+                                        System.out.println(ex);
+                                       }
                                 } else { flagged[I][J] = true;
                                     try {
                                         Image img = ImageIO.read(getClass().getResource("F.png"));
@@ -241,11 +252,6 @@ public class win {
                                    }  
                                     }
                         } else if(count[I][J] == 0) {
-                                
-                                
-                                //if you've revealed a 0, reveal all its neighbors
-                               // System.out.println("xPos " + I + " yPos " + J);
-                                //System.exit(0);
                                 reveal(I, J);
 
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
@@ -254,22 +260,25 @@ public class win {
                             }
                             
                             if (clicked[I][J] == 0) {
+                                System.out.println("revealing a tile");
                                 revealed[I][J] = true;  
                             }  else  if (clicked[I][J] > 0) {
+                                System.out.println("revealing a tiles surroundings");
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
                                           try{   
                                             if(flagged[a][b] == false) {
                                                 
-                                                if (count[a][b] == 9) {
-                                                    for (int i = 0; i < rows; a++) {
-                                                        for (int j = 0; j < columns; b++) {
+                                                 if (count[a][b] == 9) {
+                                                     new gameOver();
+                                                    for (int i = 0; i < rows; i++) {
+                                                        for (int j = 0; j < columns; j++) {
                                                             if(count[i][j] == 9) {
                                                                 revealed[i][j] = true;
                                                             }
                                                         }
                                                     }
-                                                } else {
+                                                } else { 
                                                     clicked[a][b] = 1;
                                                     revealed[a][b] = true;
                                                 }
@@ -308,7 +317,7 @@ public class win {
                                                } 
                                             }
 
-                                               new gameOver();
+                                               //new gameOver();
                                             } else {
                                                     try {
                                                         Image img = ImageIO.read(getClass().getResource(count[i][j]+".png"));
