@@ -45,6 +45,17 @@ public class grid  {
         fl.setSize(100, 100);
         fl.setLocationRelativeTo(null);
         fl.setVisible(true);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (count[i][j] < 0 && flagged[i][j] == true);
+                try {
+                    Image img = ImageIO.read(getClass().getResource("WF.png"));
+                    buttons[i][j].setIcon(new ImageIcon(img));
+                   } catch (Exception ex) {
+                    System.out.println(ex);
+                   }
+            }
+        }
     }
 }
 
@@ -75,7 +86,7 @@ public class win {
                     else m = 0;
                     //sets the current tile to either a mine or an empty
                     minef[i][j] = m;
-                    numMines++;
+                    
                 }
             }
             return minef;
@@ -88,6 +99,7 @@ public class win {
                         int num = 0;
                         if (minef[i][j] == 9) {
                             num = 9;
+                            numMines++;
                         } else {
                             //for all neighbors of the current tile [i][j]
                             for (int a = i - 1; a < i + 2; a++) {
@@ -148,6 +160,7 @@ public class win {
                 final int I = i;
                 final int J = j;
                 //if its a mine
+                
                 if (count[i][j] == 9) {
                     buttons[i][j] = new JButton();
                     try {
@@ -157,22 +170,22 @@ public class win {
                         System.out.println(ex);
                        }
                     buttons[i][j].addMouseListener( new MouseAdapter() { 
-                
+                        
                         public void mouseClicked(MouseEvent me) {
 
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
                             
-                            int numMines = 0;
-                            int flaggedM = 0;
-                            for (int i = 0; i < rows; i++) {
+                            
+                            /* for (int i = 0; i < rows; i++) {
                                 for (int j = 0; j < columns; j++) {
                                     if(count[i][j] == 9) {
                                     numMines++;
                                     } 
                                 }
-                            }
+                            } */
                             if(SwingUtilities.isRightMouseButton(me)) {
+                                flaggedM++;
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
                                     try {
@@ -191,9 +204,8 @@ public class win {
                                 }  
                                 if(flaggedM == numMines) {
                                     new win();
-                                } else {
-                                    flaggedM++;
                                 }
+                                System.out.println(flaggedM + " mines have been flagged out of " + numMines);
                             } else if (!flagged[I][J]) {
                                 
                                     for (int i = 0; i < rows; i++) {
