@@ -16,6 +16,8 @@ public class grid  {
     JPanel p = new JPanel();
     JButton[][]buttons = new JButton[rows][columns];
     
+    //2D arrays for various propertys of the tiles
+
     int[][] minef = new int[rows][columns];
     int[][] count = new int[rows][columns];
     boolean[][] flagged = new boolean[rows][columns];   
@@ -58,15 +60,20 @@ public class win {
     }
 }
 
+    //method for generating mines
+
     public int[][] mineGen() {
             int m;
             double r = 0;
             Random rand = new Random();
+            //for every tile in the grid
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
+                    //generate a random real number 0 to 1.0 (r)
                     r = rand.nextDouble();
-                    if (r <= 0.1) m = 9;
+                    if (r <= 0.15) m = 9;
                     else m = 0;
+                    //sets the current tile to either a mine or an empty
                     minef[i][j] = m;
                     numMines++;
                 }
@@ -75,17 +82,18 @@ public class win {
         }
     
         public int[][] counts() {
-            
+            //for each tile
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
                         int num = 0;
                         if (minef[i][j] == 9) {
                             num = 9;
                         } else {
-                            
+                            //for all neighbors of the current tile [i][j]
                             for (int a = i - 1; a < i + 2; a++) {
                                 for (int b = j - 1; b < j + 2; b++) {
                                     try {
+                                    //for every mine in the surrounding 8 tiles, add one to a counter
                                     if (minef[a][b] == 9) {
                                         num = num+1;
                                     }
@@ -96,57 +104,41 @@ public class win {
                             } 
                         
                     }
+                    //set the value of the current count[][] tile to the counters value
                     count [i][j] = num;
                 }
             }
             return count;
         }
    
+        //recursive method for automatically revealing empty tiles
         public void reveal(int xPos, int yPos) {
+            //exit condition
             if (count[xPos][yPos] != 0) {
                 revealed[xPos][yPos] = true; 
+                clicked[xPos][yPos] = 1;
                 return;
-            } else {
+            } else if (count[xPos][yPos] == 0) {
                 for (int a = xPos - 1; a < xPos + 2; a++) {
                     for (int b = yPos - 1; b < yPos + 2;b++) {
                          try {
-                        if (count[a][b] == 0 && a != xPos && b != yPos && a >= 0 && b >= 0 && a<revealed.length && b < revealed[0].length && !revealed[a][b]) {
-                                revealed[a][b] = true; 
+                             //if a tiles neighbor is 0, reveal it and recur again, starting from that tile
+                        if (count[a][b] == 0 && a >= 0 && b >= 0 && a < rows && b < columns && !revealed[a][b]) {
+                                revealed[a][b] = true;
+                                clicked[a][b] = 1; 
                                 System.out.println("I am revealed " + a + " " + b);
                                 reveal(a, b);                           
                             } else {
+                                //otherwise, just reveal and move on to the next tile
                                 revealed[a][b] = true;
+                                clicked[a][b] = 1; 
                             }
                         } catch (IndexOutOfBoundsException e) {
-                            System.out.println("help I need some debugging!!");
-                   // System.exit(0);
                             continue;
                         }
                     }
                 }
-            }
-    /* if (xPos <0 || xPos > rows-1 || yPos<0 || yPos > columns-1) {
-        return;
-    }
-         if(count[yPos][xPos]!=0){
-            System.out.println("revealing xPos = " + xPos + " yPos = " + yPos);
-            revealed[yPos][xPos] = true;
-            return;   
-         } else  {
-           System.out.println("revealing the current tile xPos = " + xPos + " yPos = " + yPos);
-            revealed[yPos][xPos] = true;
-             for (int a = (xPos - 1); a < (xPos + 2); a++) {
-                    for (int b = (yPos - 1); b < (yPos + 2); b++) { 
-                        if(a>=0 && a< rows && b>=0 && b < columns && a!=xPos && b!=yPos) {
-                            revealed[a][b] = true;
-                            reveal(a, b);
-                        } else {
-                            return;
-                        }
-                    }
-                }
-            } */
-             
+            }            
     }  
     public void addButtons() {
         mineGen();
@@ -165,37 +157,44 @@ public class win {
                         System.out.println(ex);
                        }
                     buttons[i][j].addMouseListener( new MouseAdapter() { 
-                        boolean[][] revealed = new boolean[rows][columns];
-                        
-                        
+                
                         public void mouseClicked(MouseEvent me) {
 
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
                             
-                            
-                            if(SwingUtilities.isRightMouseButton(me)) {
-                                  try {
-                                    Image img = ImageIO.read(getClass().getResource("F.png"));
-                                    buttons[I][J].setIcon(new ImageIcon(img));
-                               } catch (Exception ex) {
-                                    System.out.println(ex);
-                               }  
-                               flagged[I][J] = true;
-                               for (int i = 0; i < rows; i++) {
+                            int numMines = 0;
+                            int flaggedM = 0;
+                            for (int i = 0; i < rows; i++) {
                                 for (int j = 0; j < columns; j++) {
                                     if(count[i][j] == 9) {
                                     numMines++;
                                     } 
                                 }
                             }
-                            if(flaggedM == numMines) {
-                                new win();
-                            } else {
-                                flaggedM = flaggedM + 1;
-                            }
-
-                            } else if (flagged[I][J] != true) {
+                            if(SwingUtilities.isRightMouseButton(me)) {
+                                if (flagged[I][J] == true) {
+                                    flagged[I][J] = false;
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("X.png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                       } catch (Exception ex) {
+                                        System.out.println(ex);
+                                       }
+                                } else { flagged[I][J] = true;  
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("F.png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                    } catch (Exception ex) {
+                                        System.out.println(ex);
+                                    }
+                                }  
+                                if(flaggedM == numMines) {
+                                    new win();
+                                } else {
+                                    flaggedM++;
+                                }
+                            } else if (!flagged[I][J]) {
                                 
                                     for (int i = 0; i < rows; i++) {
                                         for (int j = 0; j < columns; j++) {
@@ -261,7 +260,6 @@ public class win {
                         } else if(count[I][J] == 0) {
                             revealed[I][J] = true;
                             reveal(I, J);
-                                //reveal(I, J);
 
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
                             if (flagged[I][J] == true) {
@@ -275,9 +273,7 @@ public class win {
                                         for (int b = J - 1; b < J + 2; b++) {
                                           try{   
                                             if(flagged[a][b] == false) {
-                                                
                                                  if (count[a][b] == 9) {
-                                                     new gameOver();
                                                     for (int i = 0; i < rows; i++) {
                                                         for (int j = 0; j < columns; j++) {
                                                             if(count[i][j] == 9) {
@@ -285,20 +281,21 @@ public class win {
                                                             }
                                                         }
                                                     }
-                                                } else { 
+                                                    new gameOver();
+                                                } else if (count[a][b] > 0 && count[a][b] < 9) { 
                                                     clicked[a][b] = 1;
                                                     revealed[a][b] = true;
+                                                } else if (count[a][b] == 0) {
+                                                    reveal(a, b);
                                                 }
                                             } else if (flagged[a][b] == true) {
-                                        continue;
-                                    }
-                                } 
-                                    catch (ArrayIndexOutOfBoundsException er) {
+                                                continue;
+                                            }
+                                        } catch (ArrayIndexOutOfBoundsException er) {
                                                 continue;
                                         }
-                                }
-                                } 
-                                    
+                                        }
+                                    }  
                                 } 
                                     clicked[I][J]++;
                             }
