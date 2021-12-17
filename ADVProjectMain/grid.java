@@ -65,7 +65,7 @@ public class win {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
                     r = rand.nextDouble();
-                    if (r <= 0.2) m = 9;
+                    if (r <= 0.1) m = 9;
                     else m = 0;
                     minef[i][j] = m;
                     numMines++;
@@ -102,21 +102,28 @@ public class win {
             return count;
         }
    
-        public void reveal(int yPos, int xPos) {
-            try {
-                
+        public void reveal(int xPos, int yPos) {
+            if (count[xPos][yPos] != 0) {
+                revealed[xPos][yPos] = true; 
+                return;
+            } else {
                 for (int a = xPos - 1; a < xPos + 2; a++) {
                     for (int b = yPos - 1; b < yPos + 2;b++) {
-                        if (count[a][b] != 0) {
-                            revealed[a][b] = true;
-                        } else if (count[a][b] == 0) {
-                            revealed[a][b] = true;
-                            reveal(a, b);
+                         try {
+                        if (count[a][b] == 0 && a != xPos && b != yPos && a >= 0 && b >= 0 && a<revealed.length && b < revealed[0].length && !revealed[a][b]) {
+                                revealed[a][b] = true; 
+                                System.out.println("I am revealed " + a + " " + b);
+                                reveal(a, b);                           
+                            } else {
+                                revealed[a][b] = true;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println("help I need some debugging!!");
+                   // System.exit(0);
+                            continue;
                         }
                     }
                 }
-            } catch (IndexOutOfBoundsException e) {
-                return;
             }
     /* if (xPos <0 || xPos > rows-1 || yPos<0 || yPos > columns-1) {
         return;
@@ -252,7 +259,9 @@ public class win {
                                    }  
                                     }
                         } else if(count[I][J] == 0) {
-                                reveal(I, J);
+                            revealed[I][J] = true;
+                            reveal(I, J);
+                                //reveal(I, J);
 
                         } else if(count[I][J] > 0 && count[I][J] < 9) {
                             if (flagged[I][J] == true) {
@@ -260,10 +269,8 @@ public class win {
                             }
                             
                             if (clicked[I][J] == 0) {
-                                System.out.println("revealing a tile");
                                 revealed[I][J] = true;  
                             }  else  if (clicked[I][J] > 0) {
-                                System.out.println("revealing a tiles surroundings");
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
                                           try{   
