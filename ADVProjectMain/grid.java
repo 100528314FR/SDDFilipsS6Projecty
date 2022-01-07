@@ -47,7 +47,7 @@ public class grid  {
         fl.setVisible(true);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                if (count[i][j] < 0 && flagged[i][j] == true);
+                if (count[i][j] > 0 && flagged[i][j] == true) {
                 try {
                     Image img = ImageIO.read(getClass().getResource("WF.png"));
                     buttons[i][j].setIcon(new ImageIcon(img));
@@ -58,6 +58,7 @@ public class grid  {
         }
     }
 }
+    }
 
 public class win {
     public win() {
@@ -68,6 +69,14 @@ public class win {
         fw.setSize(100, 100);
         fw.setLocationRelativeTo(null);
         fw.setVisible(true);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (revealed[i][j] == false && count[i][j] < 9 && flagged[i][j] == false) {
+                    revealed[i][j] = true;
+                }
+            }
+        }
     }
 }
 
@@ -176,18 +185,11 @@ public class win {
                             buttons[I][J].getModel().setArmed(true);
                             buttons[I][J].getModel().setPressed(true);
                             
-                            
-                            /* for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < columns; j++) {
-                                    if(count[i][j] == 9) {
-                                    numMines++;
-                                    } 
-                                }
-                            } */
                             if(SwingUtilities.isRightMouseButton(me)) {
                                 flaggedM++;
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
+                                    flaggedM = flaggedM - 2;
                                     try {
                                         Image img = ImageIO.read(getClass().getResource("X.png"));
                                         buttons[I][J].setIcon(new ImageIcon(img));
