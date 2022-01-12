@@ -14,6 +14,7 @@ public class grid  {
     
     JFrame f = new JFrame();
     JPanel p = new JPanel();
+    GridBagConstraints c = new GridBagConstraints();
     JButton[][]buttons = new JButton[rows][columns];
     
     //2D arrays for various propertys of the tiles
@@ -28,10 +29,10 @@ public class grid  {
     public grid() { 
 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        p.setLayout(new GridLayout(rows, columns));
+        p.setLayout(new GridBagLayout());
         addButtons();
         f.add(p);
-        f.pack();
+        f.setSize(columns*32, rows*36);
         f.setLocationRelativeTo(null);
         f.setVisible(true);
         f.setResizable(false);
@@ -356,7 +357,9 @@ public class win {
                     buttons[i][j].setPreferredSize(new Dimension(32, 32));
                 }
                 
-                p.add(buttons[i][j]);
+                c.gridx = j;
+                c.gridy = i - 2;
+                p.add(buttons[i][j], c);
                 
             }
         }   

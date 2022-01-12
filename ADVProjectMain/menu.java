@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 
 public class  menu extends JFrame{
@@ -19,19 +20,29 @@ public class  menu extends JFrame{
             
             JFrame fn = new JFrame();
             JLabel l = new JLabel("Enter your name:");
+            JLabel l1 = new JLabel("Please enter a valid name");
             JButton b = new JButton("Ok");
             JTextArea tf = new JTextArea();
             fn.setLayout(null);
             l.setBounds(20, 10, 200, 40);
             l.setFont(new Font("Verdana", Font.BOLD, 15));
+            l1.setBounds(20, 65, 200, 20);
+            l1.setFont(new Font("Verdana", Font.PLAIN, 11));
             tf.setBounds(20, 45, 150, 20);
-            b.setBounds(125, 75, 50, 25);
+            b.setBounds(125, 90, 50, 25);
             b.addActionListener(new ActionListener(){  
                 public void actionPerformed(ActionEvent e){  
-                            name = tf.getText(); 
-                            System.out.println(name);
-                            new grid();
-                            fn.dispose();
+                            String test = tf.getText(); 
+                            
+                            if (test.length() > 0) {
+                                name = test;
+                                new grid();
+                                fn.dispose();
+                            } else {
+                                fn.add(l1);
+                                fn.pack();
+                                fn.setSize(200,150);
+                            }
                         }  
                     });  
             fn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
