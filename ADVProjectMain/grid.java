@@ -30,10 +30,10 @@ public class grid  {
     JLabel nam = new JLabel(name);
     GridBagConstraints c = new GridBagConstraints();
     JButton[][]buttons = new JButton[rows][columns];
-    JPanel flowPanel = new JPanel(new FlowLayout());
-    JPanel timePane = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    JPanel flowPanel = new JPanel();
+    JPanel timePane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
-    //2D arrays for various propertys of the tiles
+    //2D arrays for various properties of the tiles
 
     int[][] minef = new int[rows][columns];
     int[][] count = new int[rows][columns];
@@ -48,6 +48,29 @@ public class grid  {
         Thread thread = new Thread(new Runnable() {
 
             public void run() {
+                try {
+                    Image img = ImageIO.read(getClass().getResource("t0.jpg"));
+                    th.setIcon(new ImageIcon(img));
+                   } catch (Exception ex) {
+                    System.out.println(ex);
+                   }
+                   try {
+                    Image img = ImageIO.read(getClass().getResource("t0.jpg"));
+                    tt.setIcon(new ImageIcon(img));
+                   } catch (Exception ex) {
+                    System.out.println(ex);
+                   }
+                   try {
+                    Image img = ImageIO.read(getClass().getResource("t0.jpg"));
+                    tu.setIcon(new ImageIcon(img));
+                   } catch (Exception ex) {
+                    System.out.println(ex);
+                   }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
                  while(run == true) {
                     sec[2]++;
                     if(sec[2] > 9) {
@@ -58,9 +81,24 @@ public class grid  {
                         sec[0]++;
                         sec[1] = 0;
                     }
-                    th.setText(String.valueOf(sec[0]));
-                    tt.setText(String.valueOf(sec[1]));
-                    tu.setText(String.valueOf(sec[2]));
+                    try {
+                        Image img = ImageIO.read(getClass().getResource("t"+sec[0]+".jpg"));
+                        th.setIcon(new ImageIcon(img));
+                       } catch (Exception ex) {
+                        System.out.println(ex);
+                       }
+                       try {
+                        Image img = ImageIO.read(getClass().getResource("t"+sec[1]+".jpg"));
+                        tt.setIcon(new ImageIcon(img));
+                       } catch (Exception ex) {
+                        System.out.println(ex);
+                       }
+                       try {
+                        Image img = ImageIO.read(getClass().getResource("t"+sec[2]+".jpg"));
+                        tu.setIcon(new ImageIcon(img));
+                       } catch (Exception ex) {
+                        System.out.println(ex);
+                       }
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch(InterruptedException ex) {
@@ -101,8 +139,12 @@ public class grid  {
         timePane.add(tu);
         nam.setBorder(BorderFactory.createEmptyBorder(0,0,0,7));
         nam.setFont(font.deriveFont(Font.PLAIN, 9f));
+        tu.setPreferredSize(new Dimension(28, 46));
+        tt.setPreferredSize(new Dimension(28, 46));
+        th.setPreferredSize(new Dimension(28, 46));
+        timePane.setBorder(BorderFactory.createLoweredBevelBorder());
         infoP.setLayout(new BorderLayout());
-        infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15,3,0,3), BorderFactory.createLoweredBevelBorder()));
+        infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15,3,3,3), BorderFactory.createLoweredBevelBorder()));
         infoP.add(timePane, BorderLayout.WEST);
         infoP.add(flowPanel, BorderLayout.CENTER);
         infoP.add(nam, BorderLayout.EAST);
@@ -167,6 +209,7 @@ public class win {
         JLabel l = new JLabel("YOU WIN");
         fw.setLayout(null);
         fw.setBackground(new Color(189,189,189));
+        fw.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
         l.setFont(font.deriveFont(Font.PLAIN, 10f));
         l.setBounds(18,15, 100, 20);
         try {
@@ -336,7 +379,7 @@ public class win {
                                         }        
                                 }
                                 try {
-                                    Image img = ImageIO.read(getClass().getResource("T9.png"));
+                                    Image img = ImageIO.read(getClass().getResource("this9.png"));
                                     buttons[I][J].setIcon(new ImageIcon(img));
                                } catch (Exception ex) {
                                     System.out.println(ex);
@@ -438,7 +481,7 @@ public class win {
                                                } 
                                             } else if (clicked[i][j] > 0) {
                                                 try {
-                                                    Image img = ImageIO.read(getClass().getResource("T9.png"));
+                                                    Image img = ImageIO.read(getClass().getResource("this9.png"));
                                                     buttons[i][j].setIcon(new ImageIcon(img));
                                                } catch (Exception ex) {
                                                     System.out.println(ex);

@@ -37,7 +37,7 @@ public class  menu extends JFrame{
             }
             
             fn.setLayout(null);
-            fn.getRootPane().setBackground(new Color(189,189,189));
+            fn.getContentPane().setBackground(new Color(189,189,189));
             fn.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
             l.setBounds(13, 10, 200, 40);
             l.setFont(font.deriveFont(Font.PLAIN, 10f));
@@ -84,7 +84,8 @@ public class  menu extends JFrame{
             int dif = 1;
             JFrame fd = new JFrame();
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            fd.getRootPane().setBackground(new Color(189,189,189));
+            fd.getContentPane().setBackground(new Color(189,189,189));
+            fd.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
             Object[] options = {"Easy", "Medium", "Hard"};
             dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
                 JOptionPane.YES_NO_CANCEL_OPTION,
