@@ -33,11 +33,11 @@ public class  menu extends JFrame{
             b.addActionListener(new ActionListener(){  
                 public void actionPerformed(ActionEvent e){  
                             String test = tf.getText(); 
-                            
                             if (test.length() > 0) {
                                 name = test;
                                 new grid();
                                 fn.dispose();
+                                System.out.println(name);
                             } else {
                                 fn.add(l1);
                                 fn.pack();

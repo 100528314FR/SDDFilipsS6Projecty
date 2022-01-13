@@ -1,5 +1,6 @@
 import javax.imageio.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -8,12 +9,18 @@ public class grid  {
     
     int rows = menu.rows;
     int columns = menu.columns;
+    String name = menu.name;
     int numMines = 0;
     int flaggedM = 0;
 
     
     JFrame f = new JFrame();
-    JPanel p = new JPanel();
+    JLayeredPane lPane = new JLayeredPane();
+    JPanel mineP = new JPanel();
+    JPanel infoP = new JPanel();
+    JLabel time = new JLabel("testtest");
+    JButton reset = new JButton();
+    JLabel nam = new JLabel(name);
     GridBagConstraints c = new GridBagConstraints();
     JButton[][]buttons = new JButton[rows][columns];
     
@@ -26,21 +33,61 @@ public class grid  {
     int[][] clicked = new int[rows][columns];
     
 
-    public grid() { 
+    public grid() {
+        f.setLayout(new BorderLayout());
+        try {
+            Image img = ImageIO.read(getClass().getResource("Smile.png"));
+            reset.setIcon(new ImageIcon(img));
+           } catch (Exception ex) {
+            System.out.println(ex);
+           }
+        reset.addActionListener(new ActionListener(){  
+            public void actionPerformed(ActionEvent e){  
+                        new grid();
+                        try {
+                            Thread.sleep(100);
+                        } catch(InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                        f.dispose();
+                        f.setLocationRelativeTo(null);
+                        System.out.println(name);
+                    }  
+                }); 
+        reset.setPreferredSize(new Dimension(32, 32));
 
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        p.setLayout(new GridBagLayout());
+        infoP.setLayout(new FlowLayout(FlowLayout.CENTER));
+        infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,3,0,3), BorderFactory.createLoweredBevelBorder()));
+        infoP.add(time);
+        infoP.add(reset);
+        infoP.add(nam);
+        mineP.setLayout(new GridBagLayout());
+        mineP.getInsets();
+        mineP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15,3,3,3), BorderFactory.createLoweredBevelBorder()));
+        f.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
         addButtons();
-        f.add(p);
-        f.setSize(columns*32, rows*36);
+        f.add(mineP);
+        f.add(infoP, BorderLayout.NORTH);
+        //f.pack();
         f.setLocationRelativeTo(null);
         f.setVisible(true);
-        f.setResizable(false);
+        f.pack();
+        //f.setResizable(false);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.getContentPane().setBackground( new Color(189,189,189) );
+        mineP.setBackground( new Color(189,189,189) );
+        infoP.setBackground( new Color(189,189,189) );
     }
     public class gameOver {
     public gameOver() {
         JFrame fl = new JFrame();
         JLabel l = new JLabel("YOU LOSE");
+        try {
+            Image img = ImageIO.read(getClass().getResource("Sad.png"));
+            reset.setIcon(new ImageIcon(img));
+           } catch (Exception ex) {
+            System.out.println(ex);
+           }
         fl.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fl.add(l);
         fl.setSize(100, 100);
@@ -65,6 +112,12 @@ public class win {
     public win() {
         JFrame fw = new JFrame();
         JLabel l = new JLabel("YOU WIN");
+        try {
+            Image img = ImageIO.read(getClass().getResource("Cool.png"));
+            reset.setIcon(new ImageIcon(img));
+           } catch (Exception ex) {
+            System.out.println(ex);
+           }
         fw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fw.add(l);
         fw.setSize(100, 100);
@@ -148,7 +201,6 @@ public class win {
                         if (count[a][b] == 0 && a >= 0 && b >= 0 && a < rows && b < columns && !revealed[a][b]) {
                                 revealed[a][b] = true;
                                 clicked[a][b] = 1; 
-                                System.out.println("I am revealed " + a + " " + b);
                                 reveal(a, b);                           
                             } else {
                                 //otherwise, just reveal and move on to the next tile
@@ -358,8 +410,8 @@ public class win {
                 }
                 
                 c.gridx = j;
-                c.gridy = i - 2;
-                p.add(buttons[i][j], c);
+                c.gridy = i;
+                mineP.add(buttons[i][j], c);
                 
             }
         }   
