@@ -4,6 +4,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class grid  {
     
@@ -12,18 +13,26 @@ public class grid  {
     String name = menu.name;
     int numMines = 0;
     int flaggedM = 0;
+    Font font = menu.font;
+    int[] sec = new int[] {0,0,0};
+    boolean run = true;
+    int score = 0;
 
     
     JFrame f = new JFrame();
     JLayeredPane lPane = new JLayeredPane();
     JPanel mineP = new JPanel();
     JPanel infoP = new JPanel();
-    JLabel time = new JLabel("testtest");
+    JLabel tu = new JLabel(" ");
+    JLabel tt = new JLabel(" ");
+    JLabel th = new JLabel(" ");
     JButton reset = new JButton();
     JLabel nam = new JLabel(name);
     GridBagConstraints c = new GridBagConstraints();
     JButton[][]buttons = new JButton[rows][columns];
-    
+    JPanel flowPanel = new JPanel(new FlowLayout());
+    JPanel timePane = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
     //2D arrays for various propertys of the tiles
 
     int[][] minef = new int[rows][columns];
@@ -32,8 +41,38 @@ public class grid  {
     boolean[][] revealed = new boolean[rows][columns];
     int[][] clicked = new int[rows][columns];
     
+    
 
     public grid() {
+        run = true;
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+                 while(run == true) {
+                    sec[2]++;
+                    if(sec[2] > 9) {
+                        sec[1]++;
+                        sec[2] = 0;
+                    }
+                    if(sec[1] > 9) {
+                        sec[0]++;
+                        sec[1] = 0;
+                    }
+                    th.setText(String.valueOf(sec[0]));
+                    tt.setText(String.valueOf(sec[1]));
+                    tu.setText(String.valueOf(sec[2]));
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch(InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    System.out.println(Arrays.toString(sec));
+            }
+        }
+       
+       });
+       thread.start();
+        
         f.setLayout(new BorderLayout());
         try {
             Image img = ImageIO.read(getClass().getResource("Smile.png"));
@@ -44,6 +83,7 @@ public class grid  {
         reset.addActionListener(new ActionListener(){  
             public void actionPerformed(ActionEvent e){  
                         new grid();
+                        run = false;
                         try {
                             Thread.sleep(100);
                         } catch(InterruptedException ex) {
@@ -55,12 +95,17 @@ public class grid  {
                     }  
                 }); 
         reset.setPreferredSize(new Dimension(32, 32));
-
-        infoP.setLayout(new FlowLayout(FlowLayout.CENTER));
-        infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,3,0,3), BorderFactory.createLoweredBevelBorder()));
-        infoP.add(time);
-        infoP.add(reset);
-        infoP.add(nam);
+        flowPanel.add(reset);
+        timePane.add(th);
+        timePane.add(tt);
+        timePane.add(tu);
+        nam.setBorder(BorderFactory.createEmptyBorder(0,0,0,7));
+        nam.setFont(font.deriveFont(Font.PLAIN, 9f));
+        infoP.setLayout(new BorderLayout());
+        infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15,3,0,3), BorderFactory.createLoweredBevelBorder()));
+        infoP.add(timePane, BorderLayout.WEST);
+        infoP.add(flowPanel, BorderLayout.CENTER);
+        infoP.add(nam, BorderLayout.EAST);
         mineP.setLayout(new GridBagLayout());
         mineP.getInsets();
         mineP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15,3,3,3), BorderFactory.createLoweredBevelBorder()));
@@ -68,20 +113,26 @@ public class grid  {
         addButtons();
         f.add(mineP);
         f.add(infoP, BorderLayout.NORTH);
-        //f.pack();
+        f.pack();
         f.setLocationRelativeTo(null);
         f.setVisible(true);
         f.pack();
-        //f.setResizable(false);
+        f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.getContentPane().setBackground( new Color(189,189,189) );
-        mineP.setBackground( new Color(189,189,189) );
-        infoP.setBackground( new Color(189,189,189) );
+        f.getContentPane().setBackground(new Color(189,189,189));
+        mineP.setBackground(new Color(189,189,189));
+        infoP.setBackground(new Color(189,189,189));
+        flowPanel.setBackground(new Color(189,189,189));
     }
     public class gameOver {
     public gameOver() {
+        run = false;
         JFrame fl = new JFrame();
         JLabel l = new JLabel("YOU LOSE");
+        fl.setLayout(null);
+        fl.setBackground(new Color(189,189,189));
+        l.setFont(font.deriveFont(Font.PLAIN, 10f));
+        l.setBounds(18,15, 100, 20);
         try {
             Image img = ImageIO.read(getClass().getResource("Sad.png"));
             reset.setIcon(new ImageIcon(img));
@@ -89,6 +140,7 @@ public class grid  {
             System.out.println(ex);
            }
         fl.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fl.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
         fl.add(l);
         fl.setSize(100, 100);
         fl.setLocationRelativeTo(null);
@@ -110,8 +162,13 @@ public class grid  {
 
 public class win {
     public win() {
+        run = false;
         JFrame fw = new JFrame();
         JLabel l = new JLabel("YOU WIN");
+        fw.setLayout(null);
+        fw.setBackground(new Color(189,189,189));
+        l.setFont(font.deriveFont(Font.PLAIN, 10f));
+        l.setBounds(18,15, 100, 20);
         try {
             Image img = ImageIO.read(getClass().getResource("Cool.png"));
             reset.setIcon(new ImageIcon(img));

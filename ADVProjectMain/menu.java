@@ -1,13 +1,18 @@
 import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.io.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.imageio.*;
 
 
 public class  menu extends JFrame{
     static int rows = 1;
     static int columns;
     static String name;
+    static Font font;
 
     public menu() {
         new diff();
@@ -17,19 +22,36 @@ public class  menu extends JFrame{
     }
     public class name extends Frame {
         public name() {
-            
             JFrame fn = new JFrame();
             JLabel l = new JLabel("Enter your name:");
-            JLabel l1 = new JLabel("Please enter a valid name");
-            JButton b = new JButton("Ok");
+            JLabel l1 = new JLabel("Enter a valid name");
+            JButton b = new JButton();
             JTextArea tf = new JTextArea();
+            
+            try {
+                font = Font.createFont(Font.TRUETYPE_FONT, new File("font.ttf"));
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(font);
+            } catch (IOException|FontFormatException e) {
+                e.printStackTrace();
+            }
+            
             fn.setLayout(null);
-            l.setBounds(20, 10, 200, 40);
-            l.setFont(new Font("Verdana", Font.BOLD, 15));
+            fn.getRootPane().setBackground(new Color(189,189,189));
+            fn.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
+            l.setBounds(13, 10, 200, 40);
+            l.setFont(font.deriveFont(Font.PLAIN, 10f));
             l1.setBounds(20, 65, 200, 20);
-            l1.setFont(new Font("Verdana", Font.PLAIN, 11));
+            l1.setFont(font.deriveFont(Font.PLAIN, 8f));
             tf.setBounds(20, 45, 150, 20);
+            tf.setBorder(BorderFactory.createLoweredBevelBorder());
             b.setBounds(125, 90, 50, 25);
+            try {
+                Image img = ImageIO.read(getClass().getResource("tick.png"));
+                b.setIcon(new ImageIcon(img));
+               } catch (Exception ex) {
+                System.out.println(ex);
+               }
             b.addActionListener(new ActionListener(){  
                 public void actionPerformed(ActionEvent e){  
                             String test = tf.getText(); 
@@ -41,27 +63,30 @@ public class  menu extends JFrame{
                             } else {
                                 fn.add(l1);
                                 fn.pack();
-                                fn.setSize(200,150);
+                                fn.setSize(200,165);
                             }
                         }  
                     });  
             fn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             fn.setLocationRelativeTo(null);
+            
             fn.add(tf);
             fn.add(l);
             fn.add(b);
-            fn.setSize(200,150);
+            fn.setSize(200,165);
             fn.setVisible(true);
+            
         }
     }
     public class diff {
         public diff() {
-
+            //UIManager.put("OptionPane.font", new Font(font.getName(), Font.PLAIN, 24));
             int dif = 1;
             JFrame fd = new JFrame();
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            fd.getRootPane().setBackground(new Color(189,189,189));
             Object[] options = {"Easy", "Medium", "Hard"};
-            dif = JOptionPane.showOptionDialog(null, "Select a difficulty", "Difficulty",
+            dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
