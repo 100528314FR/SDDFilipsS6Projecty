@@ -1,4 +1,5 @@
 import javax.imageio.*;
+import javax.sql.rowset.FilteredRowSet;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -26,10 +27,10 @@ public class grid {
     JLabel tt = new JLabel(" ");
     JLabel th = new JLabel(" ");
     JButton reset = new JButton();
-    JLabel nam = new JLabel(name);
+    JLabel nam = new JLabel(name, SwingConstants.RIGHT);
+    BoxLayout boxlayout = new BoxLayout(infoP, BoxLayout.X_AXIS);
     GridBagConstraints c = new GridBagConstraints();
     JButton[][] buttons = new JButton[rows][columns];
-    JPanel flowPanel = new JPanel();
     JPanel timePane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
     // 2D arrays for various properties of the tiles
@@ -101,7 +102,7 @@ public class grid {
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
-                    System.out.println(Arrays.toString(sec));
+                    // System.out.println(Arrays.toString(sec));
                 }
             }
 
@@ -130,8 +131,8 @@ public class grid {
                 System.out.println(name);
             }
         });
+        reset.setMaximumSize(new Dimension(32, 32));
         reset.setPreferredSize(new Dimension(32, 32));
-        flowPanel.add(reset);
         timePane.add(th);
         timePane.add(tt);
         timePane.add(tu);
@@ -141,12 +142,15 @@ public class grid {
         tt.setPreferredSize(new Dimension(28, 46));
         th.setPreferredSize(new Dimension(28, 46));
         timePane.setBorder(BorderFactory.createLoweredBevelBorder());
+        timePane.setMaximumSize(new Dimension(84, 46));
         infoP.setLayout(new BorderLayout());
         infoP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15, 3, 3, 3),
                 BorderFactory.createLoweredBevelBorder()));
-        infoP.add(timePane, BorderLayout.WEST);
-        infoP.add(flowPanel, BorderLayout.CENTER);
-        infoP.add(nam, BorderLayout.EAST);
+        infoP.setLayout(boxlayout);
+        infoP.add(timePane);
+        infoP.add(Box.createHorizontalGlue());
+        infoP.add(reset);
+        infoP.add(nam);
         mineP.setLayout(new GridBagLayout());
         mineP.getInsets();
         mineP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15, 3, 3, 3),
@@ -162,9 +166,11 @@ public class grid {
         f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.getContentPane().setBackground(new Color(189, 189, 189));
+        Rectangle r = f.getBounds();
+        nam.setMinimumSize(new Dimension(((int) Math.round(r.width / 2.3565)), 12));
+        nam.setPreferredSize(new Dimension(((int) Math.round(r.width / 2.3565)), 12));
         mineP.setBackground(new Color(189, 189, 189));
         infoP.setBackground(new Color(189, 189, 189));
-        flowPanel.setBackground(new Color(189, 189, 189));
     }
 
     public class gameOver {
@@ -198,6 +204,13 @@ public class grid {
                     if (count[i][j] < 9 && flagged[i][j] == true) {
                         try {
                             Image img = ImageIO.read(getClass().getResource("WF.png"));
+                            buttons[i][j].setIcon(new ImageIcon(img));
+                        } catch (Exception ex) {
+                            System.out.println(ex);
+                        }
+                    } else if (count[i][j] == 9 && flagged[i][j]) {
+                        try {
+                            Image img = ImageIO.read(getClass().getResource("F.png"));
                             buttons[i][j].setIcon(new ImageIcon(img));
                         } catch (Exception ex) {
                             System.out.println(ex);
@@ -332,6 +345,7 @@ public class grid {
         }
     }
 
+    //generates the grid of buttons and the behaviour, depending on their value, of each when clicked
     public void addButtons() {
         mineGen();
         counts();
