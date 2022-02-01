@@ -1,10 +1,7 @@
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.imageio.*;
 
 
@@ -13,6 +10,7 @@ public class  menu extends JFrame{
     static int columns;
     static String name;
     static Font font;
+    static String difficulty;
 
     public menu() {
         new diff();
@@ -96,12 +94,15 @@ public class  menu extends JFrame{
 
             if (dif == 0) {
              rows = 8;
+             difficulty = "Easy";
             }
             else if (dif == 1) {
                 rows = 12;
+                difficulty = "Medium";
             }
             else if (dif == 2) {
                 rows = 14;
+                difficulty = "Hard";
             }
             columns = (rows + 4);
     

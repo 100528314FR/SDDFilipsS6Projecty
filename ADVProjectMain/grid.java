@@ -1,7 +1,5 @@
 import javax.imageio.*;
-import javax.sql.rowset.FilteredRowSet;
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -17,9 +15,11 @@ public class grid {
     Font font = menu.font;
     int[] sec = new int[] { 0, 0, 0 };
     boolean run = true;
-    int score = 0;
+    static int score = 0;
 
     JFrame f = new JFrame();
+    JFrame fl = new JFrame();
+    JFrame fw = new JFrame();
     JLayeredPane lPane = new JLayeredPane();
     JPanel mineP = new JPanel();
     JPanel infoP = new JPanel();
@@ -127,6 +127,8 @@ public class grid {
                     Thread.currentThread().interrupt();
                 }
                 f.dispose();
+                fw.dispose();
+                fl.dispose();
                 f.setLocationRelativeTo(null);
                 System.out.println(name);
             }
@@ -176,8 +178,11 @@ public class grid {
     public class gameOver {
         public gameOver() {
             run = false;
-
-            JFrame fl = new JFrame();
+            for (int i = 0; i < 3; i++) {
+                score = (score * 10) + sec[i];
+            }
+            new mineWrite();
+            
             JLabel l = new JLabel("YOU LOSE");
             fl.setLayout(null);
             fl.setBackground(new Color(189, 189, 189));
@@ -195,9 +200,7 @@ public class grid {
             fl.setSize(100, 100);
             fl.setLocationRelativeTo(null);
             fl.setVisible(true);
-            for (int i = 0; i < 3; i++) {
-                score = (score * 10) + sec[i];
-            }
+            
             System.out.println(score);
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
@@ -224,8 +227,11 @@ public class grid {
     public class win {
         public win() {
             run = false;
-
-            JFrame fw = new JFrame();
+            for (int i = 0; i < 3; i++) {
+                score = (score * 10) + sec[i];
+            }
+            new mineWrite();
+ 
             JLabel l = new JLabel("YOU WIN");
             fw.setLayout(null);
             fw.setBackground(new Color(189, 189, 189));
@@ -243,9 +249,7 @@ public class grid {
             fw.setSize(100, 100);
             fw.setLocationRelativeTo(null);
             fw.setVisible(true);
-            for (int i = 0; i < 3; i++) {
-                score = (score * 10) + sec[i];
-            }
+            
             System.out.println(score);
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {

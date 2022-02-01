@@ -15,7 +15,6 @@ public class mineWrite {
       String pass = "100528614";
       Statement stmt = null;
 
-      //String query = "INSERT INTO frudnicki_minesweeper (Name, TimeWon, Difficulty) VALUES ('test', 23, 'easy') ";
       String query = "INSERT INTO frudnicki_minesweeper (Name, TimeWon, Difficulty) VALUES ('" + name + "', " + time + ", '" + diff + "') ";
       try {
          Connection conn = DriverManager.getConnection(database, user, pass);
