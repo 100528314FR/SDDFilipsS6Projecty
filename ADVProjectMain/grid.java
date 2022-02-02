@@ -16,6 +16,7 @@ public class grid {
     int[] sec = new int[] { 0, 0, 0 };
     boolean run = true;
     static int score = 0;
+    int bombC = 0;
 
     JFrame f = new JFrame();
     JFrame fl = new JFrame();
@@ -175,91 +176,87 @@ public class grid {
         infoP.setBackground(new Color(189, 189, 189));
     }
 
-    public class gameOver {
-        public gameOver() {
-            run = false;
-            for (int i = 0; i < 3; i++) {
-                score = (score * 10) + sec[i];
-            }
-            new mineWrite();
-            
-            JLabel l = new JLabel("YOU LOSE");
-            fl.setLayout(null);
-            fl.setBackground(new Color(189, 189, 189));
-            l.setFont(font.deriveFont(Font.PLAIN, 10f));
-            l.setBounds(18, 15, 100, 20);
-            try {
-                Image img = ImageIO.read(getClass().getResource("Sad.png"));
-                reset.setIcon(new ImageIcon(img));
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-            fl.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            fl.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
-            fl.add(l);
-            fl.setSize(100, 100);
-            fl.setLocationRelativeTo(null);
-            fl.setVisible(true);
-            
-            System.out.println(score);
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < columns; j++) {
-                    if (count[i][j] < 9 && flagged[i][j] == true) {
-                        try {
-                            Image img = ImageIO.read(getClass().getResource("WF.png"));
-                            buttons[i][j].setIcon(new ImageIcon(img));
-                        } catch (Exception ex) {
-                            System.out.println(ex);
-                        }
-                    } else if (count[i][j] == 9 && flagged[i][j]) {
-                        try {
-                            Image img = ImageIO.read(getClass().getResource("F.png"));
-                            buttons[i][j].setIcon(new ImageIcon(img));
-                        } catch (Exception ex) {
-                            System.out.println(ex);
-                        }
+    public void gameOver() {
+        run = false;
+        for (int i = 0; i < 3; i++) {
+            score = (score * 10) + sec[i];
+        }
+        new mineWrite();
+
+        JLabel l = new JLabel("YOU LOSE");
+        fl.setLayout(null);
+        fl.setBackground(new Color(189, 189, 189));
+        l.setFont(font.deriveFont(Font.PLAIN, 10f));
+        l.setBounds(18, 15, 100, 20);
+        try {
+            Image img = ImageIO.read(getClass().getResource("Sad.png"));
+            reset.setIcon(new ImageIcon(img));
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        fl.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fl.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
+        fl.add(l);
+        fl.setSize(100, 100);
+        fl.setLocationRelativeTo(null);
+        fl.setVisible(true);
+
+        System.out.println(score);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (count[i][j] < 9 && flagged[i][j] == true) {
+                    try {
+                        Image img = ImageIO.read(getClass().getResource("WF.png"));
+                        buttons[i][j].setIcon(new ImageIcon(img));
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                } else if (count[i][j] == 9 && flagged[i][j]) {
+                    try {
+                        Image img = ImageIO.read(getClass().getResource("F.png"));
+                        buttons[i][j].setIcon(new ImageIcon(img));
+                    } catch (Exception ex) {
+                        System.out.println(ex);
                     }
                 }
             }
         }
     }
 
-    public class win {
-        public win() {
-            run = false;
-            for (int i = 0; i < 3; i++) {
-                score = (score * 10) + sec[i];
-            }
-            new mineWrite();
- 
-            JLabel l = new JLabel("YOU WIN");
-            fw.setLayout(null);
-            fw.setBackground(new Color(189, 189, 189));
-            fw.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
-            l.setFont(font.deriveFont(Font.PLAIN, 10f));
-            l.setBounds(18, 15, 100, 20);
-            try {
-                Image img = ImageIO.read(getClass().getResource("Cool.png"));
-                reset.setIcon(new ImageIcon(img));
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-            fw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            fw.add(l);
-            fw.setSize(100, 100);
-            fw.setLocationRelativeTo(null);
-            fw.setVisible(true);
-            
-            System.out.println(score);
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < columns; j++) {
-                    if (revealed[i][j] == false && count[i][j] < 9 && flagged[i][j] == false) {
-                        try {
-                            Image img = ImageIO.read(getClass().getResource(count[i][j] + ".png"));
-                            buttons[i][j].setIcon(new ImageIcon(img));
-                        } catch (Exception ex) {
-                            System.out.println(ex);
-                        }
+    public void win() {
+        run = false;
+        for (int i = 0; i < 3; i++) {
+            score = (score * 10) + sec[i];
+        }
+        new mineWrite();
+
+        JLabel l = new JLabel("YOU WIN");
+        fw.setLayout(null);
+        fw.setBackground(new Color(189, 189, 189));
+        fw.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
+        l.setFont(font.deriveFont(Font.PLAIN, 10f));
+        l.setBounds(18, 15, 100, 20);
+        try {
+            Image img = ImageIO.read(getClass().getResource("Cool.png"));
+            reset.setIcon(new ImageIcon(img));
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        fw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fw.add(l);
+        fw.setSize(100, 100);
+        fw.setLocationRelativeTo(null);
+        fw.setVisible(true);
+
+        System.out.println(score);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (revealed[i][j] == false && count[i][j] < 9 && flagged[i][j] == false) {
+                    try {
+                        Image img = ImageIO.read(getClass().getResource(count[i][j] + ".png"));
+                        buttons[i][j].setIcon(new ImageIcon(img));
+                    } catch (Exception ex) {
+                        System.out.println(ex);
                     }
                 }
             }
@@ -349,7 +346,8 @@ public class grid {
         }
     }
 
-    //generates the grid of buttons and the behaviour, depending on their value, of each when clicked
+    // generates the grid of buttons and the behaviour, depending on their value, of
+    // each when clicked
     public void addButtons() {
         mineGen();
         counts();
@@ -362,7 +360,7 @@ public class grid {
                 if (count[i][j] == 9) {
                     buttons[i][j] = new JButton();
                     try {
-                        Image img = ImageIO.read(getClass().getResource("X.png"));
+                        Image img = ImageIO.read(getClass().getResource("9.png"));
                         buttons[i][j].setIcon(new ImageIcon(img));
                     } catch (Exception ex) {
                         System.out.println(ex);
@@ -395,33 +393,83 @@ public class grid {
                                     }
                                 }
                                 if (flaggedM == numMines) {
-                                    new win();
+                                    win();
                                 }
                                 System.out.println(flaggedM + " mines have been flagged out of " + numMines);
                             } else if (!flagged[I][J]) {
+                                if (bombC == 0) {
+                                    minef[I][J] = 0;
+                                    count[I][J] = 0;
+                                    counts();
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource(count[I][J] + ".png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                    } catch (Exception ex) {
+                                        System.out.println(ex);
+                                    }
 
-                                for (int i = 0; i < rows; i++) {
-                                    for (int j = 0; j < columns; j++) {
-                                        if (count[i][j] == 9) {
-
-                                            revealed[i][j] = true;
+                                    for (int a = I - 1; a < I + 2; a++) {
+                                        for (int b = J - 1; b < J + 2; b++) {
                                             try {
-                                                Image img = ImageIO.read(getClass().getResource("9.png"));
-                                                buttons[i][j].setIcon(new ImageIcon(img));
-                                            } catch (Exception ex) {
-                                                System.out.println(ex);
+                                                if (minef[a][b] == 0) {
+                                                    clicked[a][b] = 1;
+                                                    revealed[a][b] = true;
+                                                } else {
+                                                    continue;
+                                                }
+                                            } catch (IndexOutOfBoundsException e) {
+                                                return;
                                             }
-
                                         }
                                     }
+
+                                    reveal(I, J);
+
+                                    bombC++;
+                                    /*
+                                     * numMines--;
+                                     * revealed[I][J] = true;
+                                     * minef[I][J] = 0;
+                                     * count[I][J] = 0;
+                                     * for (int a = I - 1; a < I + 2; a++) {
+                                     * for (int b = J - 1; b < J + 2; b++) {
+                                     * try {
+                                     * // for every mine in the surrounding 8 tiles, add one to a counter
+                                     * if (minef[a][b] == 9) {
+                                     * count[I][J]++;
+                                     * }
+                                     * count[a][b]--;
+                                     * } catch (ArrayIndexOutOfBoundsException e) {
+                                     * continue;
+                                     * }
+                                     * }
+                                     * }
+                                     * count[I][J]--;
+                                     */
+                                } else if (bombC > 0 && minef[I][J] == 9) {
+                                    for (int i = 0; i < rows; i++) {
+                                        for (int j = 0; j < columns; j++) {
+                                            if (count[i][j] == 9) {
+
+                                                revealed[i][j] = true;
+                                                try {
+                                                    Image img = ImageIO.read(getClass().getResource("9.png"));
+                                                    buttons[i][j].setIcon(new ImageIcon(img));
+                                                } catch (Exception ex) {
+                                                    System.out.println(ex);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                    try {
+                                        Image img = ImageIO.read(getClass().getResource("this9.png"));
+                                        buttons[I][J].setIcon(new ImageIcon(img));
+                                    } catch (Exception ex) {
+                                        System.out.println(ex);
+                                    }
+                                    gameOver();
                                 }
-                                try {
-                                    Image img = ImageIO.read(getClass().getResource("this9.png"));
-                                    buttons[I][J].setIcon(new ImageIcon(img));
-                                } catch (Exception ex) {
-                                    System.out.println(ex);
-                                }
-                                new gameOver();
                             }
                         }
 
@@ -479,7 +527,7 @@ public class grid {
                                             try {
                                                 if (flagged[a][b] == false) {
                                                     if (count[a][b] == 9) {
-                                                        new gameOver();
+                                                        gameOver();
                                                         for (int i = 0; i < rows; i++) {
                                                             for (int j = 0; j < columns; j++) {
                                                                 if (count[i][j] == 9) {
