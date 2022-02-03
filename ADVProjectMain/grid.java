@@ -16,7 +16,7 @@ public class grid {
     int[] sec = new int[] { 0, 0, 0 };
     boolean run = true;
     static int score = 0;
-    int bombC = 0;
+    int firstClick = 0;
 
     JFrame f = new JFrame();
     JFrame fl = new JFrame();
@@ -159,7 +159,7 @@ public class grid {
         mineP.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(15, 3, 3, 3),
                 BorderFactory.createLoweredBevelBorder()));
         f.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
-        addButtons();
+        buttonBehaviour();
         f.add(mineP);
         f.add(infoP, BorderLayout.NORTH);
         f.pack();
@@ -181,7 +181,6 @@ public class grid {
         for (int i = 0; i < 3; i++) {
             score = (score * 10) + sec[i];
         }
-        new mineWrite();
 
         JLabel l = new JLabel("YOU LOSE");
         fl.setLayout(null);
@@ -204,14 +203,14 @@ public class grid {
         System.out.println(score);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                if (count[i][j] < 9 && flagged[i][j] == true) {
+                if (minef[i][j] != 9 && flagged[i][j]) {
                     try {
                         Image img = ImageIO.read(getClass().getResource("WF.png"));
                         buttons[i][j].setIcon(new ImageIcon(img));
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
-                } else if (count[i][j] == 9 && flagged[i][j]) {
+                } else if (minef[i][j] == 9 && flagged[i][j]) {
                     try {
                         Image img = ImageIO.read(getClass().getResource("F.png"));
                         buttons[i][j].setIcon(new ImageIcon(img));
@@ -274,10 +273,12 @@ public class grid {
             for (int j = 0; j < columns; j++) {
                 // generate a random real number 0 to 1.0 (r)
                 r = rand.nextDouble();
-                if (r <= 0.15)
+                if (r <= 0.15) {
                     m = 9;
-                else
+                    numMines++;
+                } else {
                     m = 0;
+                }
                 // sets the current tile to either a mine or an empty
                 minef[i][j] = m;
 
@@ -293,7 +294,6 @@ public class grid {
                 int num = 0;
                 if (minef[i][j] == 9) {
                     num = 9;
-                    numMines++;
                 } else {
                     // for all neighbors of the current tile [i][j]
                     for (int a = i - 1; a < i + 2; a++) {
@@ -346,9 +346,46 @@ public class grid {
         }
     }
 
+    public void printTiles() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+
+                if (revealed[i][j] == true) {
+                    if (minef[i][j] == 9) {
+                        if (clicked[i][j] == 0) {
+                            try {
+                                Image img = ImageIO.read(getClass().getResource("9.png"));
+                                buttons[i][j].setIcon(new ImageIcon(img));
+                            } catch (Exception ex) {
+                                System.out.println(ex);
+                            }
+                        } else if (clicked[i][j] > 0) {
+                            try {
+                                Image img = ImageIO.read(getClass().getResource("this9.png"));
+                                buttons[i][j].setIcon(new ImageIcon(img));
+                            } catch (Exception ex) {
+                                System.out.println(ex);
+                            }
+                        }
+
+                        // new gameOver();
+                    } else {
+                        try {
+                            Image img = ImageIO.read(getClass().getResource(count[i][j] + ".png"));
+                            buttons[i][j].setIcon(new ImageIcon(img));
+                        } catch (Exception ex) {
+                            System.out.println(ex);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
     // generates the grid of buttons and the behaviour, depending on their value, of
     // each when clicked
-    public void addButtons() {
+    public void buttonBehaviour() {
         mineGen();
         counts();
         for (int i = 0; i < rows; i++) {
@@ -360,7 +397,7 @@ public class grid {
                 if (count[i][j] == 9) {
                     buttons[i][j] = new JButton();
                     try {
-                        Image img = ImageIO.read(getClass().getResource("9.png"));
+                        Image img = ImageIO.read(getClass().getResource("X.png"));
                         buttons[i][j].setIcon(new ImageIcon(img));
                     } catch (Exception ex) {
                         System.out.println(ex);
@@ -397,56 +434,43 @@ public class grid {
                                 }
                                 System.out.println(flaggedM + " mines have been flagged out of " + numMines);
                             } else if (!flagged[I][J]) {
-                                if (bombC == 0) {
+                                if (firstClick == 0) {
                                     minef[I][J] = 0;
                                     count[I][J] = 0;
                                     counts();
+                                    // addButtons();
                                     try {
                                         Image img = ImageIO.read(getClass().getResource(count[I][J] + ".png"));
                                         buttons[I][J].setIcon(new ImageIcon(img));
                                     } catch (Exception ex) {
                                         System.out.println(ex);
                                     }
+                                    if (count[I][J] > 0) {
+                                        for (int a = I - 1; a < I + 2; a++) {
+                                            for (int b = J - 1; b < J + 2; b++) {
+                                                try {
+                                                    if (minef[a][b] == 0 && count[a][b] > 0) {
+                                                        clicked[a][b] = 1;
+                                                        revealed[a][b] = true;
+                                                    } else if (count[a][b] == 0) {
+                                                        reveal(a, b);
 
-                                    for (int a = I - 1; a < I + 2; a++) {
-                                        for (int b = J - 1; b < J + 2; b++) {
-                                            try {
-                                                if (minef[a][b] == 0) {
-                                                    clicked[a][b] = 1;
-                                                    revealed[a][b] = true;
-                                                } else {
-                                                    continue;
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                } catch (IndexOutOfBoundsException e) {
+                                                    return;
                                                 }
-                                            } catch (IndexOutOfBoundsException e) {
-                                                return;
                                             }
                                         }
+                                        printTiles();
+                                    } else if (count[I][J] == 0) {
+                                        reveal(I, J);
+                                        printTiles();
                                     }
-
-                                    reveal(I, J);
-
-                                    bombC++;
-                                    /*
-                                     * numMines--;
-                                     * revealed[I][J] = true;
-                                     * minef[I][J] = 0;
-                                     * count[I][J] = 0;
-                                     * for (int a = I - 1; a < I + 2; a++) {
-                                     * for (int b = J - 1; b < J + 2; b++) {
-                                     * try {
-                                     * // for every mine in the surrounding 8 tiles, add one to a counter
-                                     * if (minef[a][b] == 9) {
-                                     * count[I][J]++;
-                                     * }
-                                     * count[a][b]--;
-                                     * } catch (ArrayIndexOutOfBoundsException e) {
-                                     * continue;
-                                     * }
-                                     * }
-                                     * }
-                                     * count[I][J]--;
-                                     */
-                                } else if (bombC > 0 && minef[I][J] == 9) {
+                                    numMines--;
+                                    firstClick++;
+                                } else if (firstClick > 0 && minef[I][J] == 9) {
                                     for (int i = 0; i < rows; i++) {
                                         for (int j = 0; j < columns; j++) {
                                             if (count[i][j] == 9) {
@@ -513,84 +537,68 @@ public class grid {
                             } else if (count[I][J] == 0) {
                                 revealed[I][J] = true;
                                 reveal(I, J);
+                                printTiles();
 
                             } else if (count[I][J] > 0 && count[I][J] < 9) {
-                                if (flagged[I][J] == true) {
-                                    return;
-                                }
-
-                                if (clicked[I][J] == 0) {
-                                    revealed[I][J] = true;
-                                } else if (clicked[I][J] > 0) {
+                                if (firstClick == 0) {
+                                    firstClick++;
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
                                             try {
-                                                if (flagged[a][b] == false) {
-                                                    if (count[a][b] == 9) {
-                                                        gameOver();
-                                                        for (int i = 0; i < rows; i++) {
-                                                            for (int j = 0; j < columns; j++) {
-                                                                if (count[i][j] == 9) {
-                                                                    revealed[i][j] = true;
-                                                                }
-                                                            }
-                                                        }
+                                                if (minef[a][b] == 0 && count[a][b] > 0) {
+                                                    clicked[a][b] = 1;
+                                                    revealed[a][b] = true;
+                                                } else if (count[a][b] == 0) {
+                                                    reveal(a, b);
 
-                                                    } else if (count[a][b] > 0 && count[a][b] < 9) {
-                                                        clicked[a][b] = 1;
-                                                        revealed[a][b] = true;
-                                                    } else if (count[a][b] == 0) {
-                                                        reveal(a, b);
-                                                    }
-                                                } else if (flagged[a][b] == true) {
+                                                } else {
                                                     continue;
                                                 }
-                                            } catch (ArrayIndexOutOfBoundsException er) {
-                                                continue;
+                                            } catch (IndexOutOfBoundsException ex) {
+                                                return;
                                             }
                                         }
                                     }
-                                }
-                                clicked[I][J]++;
-                            }
-                            // go through whole board, printing revealed tiles
-                            for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < columns; j++) {
-                                    try {
-                                        if (revealed[i][j] == true) {
-                                            if (count[i][j] == 9) {
-                                                if (clicked[i][j] == 0) {
-                                                    try {
-                                                        Image img = ImageIO.read(getClass().getResource("9.png"));
-                                                        buttons[i][j].setIcon(new ImageIcon(img));
-                                                    } catch (Exception ex) {
-                                                        System.out.println(ex);
-                                                    }
-                                                } else if (clicked[i][j] > 0) {
-                                                    try {
-                                                        Image img = ImageIO.read(getClass().getResource("this9.png"));
-                                                        buttons[i][j].setIcon(new ImageIcon(img));
-                                                    } catch (Exception ex) {
-                                                        System.out.println(ex);
-                                                    }
-                                                }
-
-                                                // new gameOver();
-                                            } else {
+                                } else {
+                                    if (flagged[I][J] == true) {
+                                        return;
+                                    }
+                                    if (clicked[I][J] == 0) {
+                                        revealed[I][J] = true;
+                                    } else if (clicked[I][J] > 0) {
+                                        for (int a = I - 1; a < I + 2; a++) {
+                                            for (int b = J - 1; b < J + 2; b++) {
                                                 try {
-                                                    Image img = ImageIO
-                                                            .read(getClass().getResource(count[i][j] + ".png"));
-                                                    buttons[i][j].setIcon(new ImageIcon(img));
-                                                } catch (Exception ex) {
-                                                    System.out.println(ex);
+                                                    if (flagged[a][b] == false) {
+                                                        if (count[a][b] == 9) {
+                                                            gameOver();
+                                                            for (int i = 0; i < rows; i++) {
+                                                                for (int j = 0; j < columns; j++) {
+                                                                    if (count[i][j] == 9) {
+                                                                        revealed[i][j] = true;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        } else if (count[a][b] > 0 && count[a][b] < 9) {
+                                                            clicked[a][b] = 1;
+                                                            revealed[a][b] = true;
+                                                        } else if (count[a][b] == 0) {
+                                                            reveal(a, b);
+                                                        }
+                                                    } else if (flagged[a][b] == true) {
+                                                        continue;
+                                                    }
+                                                } catch (ArrayIndexOutOfBoundsException er) {
+                                                    continue;
                                                 }
                                             }
-
                                         }
-                                    } catch (ArrayIndexOutOfBoundsException err) {
-                                        continue;
                                     }
+                                    clicked[I][J]++;
                                 }
+                                printTiles();
+
                             }
                         }
                     });
