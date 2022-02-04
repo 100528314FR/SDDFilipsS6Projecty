@@ -10,6 +10,7 @@ public class grid {
     int rows = menu.rows;
     int columns = menu.columns;
     String name = menu.name;
+    String dif = menu.difficulty;
     int numMines = 0;
     int flaggedM = 0;
     Font font = menu.font;
@@ -41,6 +42,7 @@ public class grid {
     boolean[][] flagged = new boolean[rows][columns];
     boolean[][] revealed = new boolean[rows][columns];
     int[][] clicked = new int[rows][columns];
+    results[] resultArr = null;
 
     public grid() {
         run = true;
@@ -131,7 +133,7 @@ public class grid {
                 fw.dispose();
                 fl.dispose();
                 f.setLocationRelativeTo(null);
-                System.out.println(name);
+                // System.out.println(name);
             }
         });
         reset.setMaximumSize(new Dimension(32, 32));
@@ -177,6 +179,7 @@ public class grid {
     }
 
     public void gameOver() {
+        new mineRead();
         run = false;
         for (int i = 0; i < 3; i++) {
             score = (score * 10) + sec[i];
@@ -223,6 +226,18 @@ public class grid {
     }
 
     public void win() {
+        new mineRead();
+        results result = new results();
+        try {
+            resultArr = new results[mineRead.count++];
+            
+            for (int i = 0; i < resultArr.length; i++) {
+                resultArr[mineRead.count++] = result;
+                System.out.println(resultArr[i].name + ", " + resultArr[i].score + ", " + resultArr[i].dif);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
         run = false;
         for (int i = 0; i < 3; i++) {
             score = (score * 10) + sec[i];
@@ -247,7 +262,7 @@ public class grid {
         fw.setLocationRelativeTo(null);
         fw.setVisible(true);
 
-        System.out.println(score);
+        //System.out.println(score);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 if (revealed[i][j] == false && count[i][j] < 9 && flagged[i][j] == false) {
@@ -517,6 +532,7 @@ public class grid {
                             buttons[I][J].getModel().setPressed(true);
 
                             if (SwingUtilities.isRightMouseButton(e)) {
+                                win();
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
                                     try {
@@ -535,13 +551,14 @@ public class grid {
                                     }
                                 }
                             } else if (count[I][J] == 0) {
+                                firstClick = 1;
                                 revealed[I][J] = true;
                                 reveal(I, J);
                                 printTiles();
 
                             } else if (count[I][J] > 0 && count[I][J] < 9) {
                                 if (firstClick == 0) {
-                                    firstClick++;
+                                    firstClick = 1;
                                     for (int a = I - 1; a < I + 2; a++) {
                                         for (int b = J - 1; b < J + 2; b++) {
                                             try {
