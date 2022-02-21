@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+
 import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
@@ -13,7 +15,9 @@ public class  menu extends JFrame{
     static String difficulty;
 
     public menu() {
+        //call method to get desired difficulty
         new diff();
+        //only move onto name input if a difficulty has been selected (lets player close difficulty window)
         if (rows >= 8) {
             new name();
         }
@@ -25,9 +29,9 @@ public class  menu extends JFrame{
             JLabel l1 = new JLabel("Enter a valid name");
             JButton b = new JButton();
             JTextArea tf = new JTextArea();
-            
+            //sets a custom font
             try {
-                font = Font.createFont(Font.TRUETYPE_FONT, new File("font.ttf"));
+                font = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("font.ttf"));
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 ge.registerFont(font);
             } catch (IOException|FontFormatException e) {
@@ -51,14 +55,18 @@ public class  menu extends JFrame{
                 System.out.println(ex);
                }
             b.addActionListener(new ActionListener(){  
+                //when the confirm button is clicked
                 public void actionPerformed(ActionEvent e){  
+                            //a fodder string is set to the text input
                             String test = tf.getText(); 
+                            //if something has been input
                             if (test.length() > 0) {
+                                //set the name to the test, which is what was input
                                 name = test;
                                 new grid();
                                 fn.dispose();
-                                System.out.println(name);
                             } else {
+                                //if the test string is empty (length < 0), tell the player to input a valid name
                                 fn.add(l1);
                                 fn.pack();
                                 fn.setSize(200,165);
@@ -78,11 +86,12 @@ public class  menu extends JFrame{
     }
     public class diff {
         public diff() {
-            //UIManager.put("OptionPane.font", new Font(font.getName(), Font.PLAIN, 24));
-            int dif = 1;
+            int dif;
             JFrame fd = new JFrame();
+            UIManager.put("OptionPane.background",new ColorUIResource(189,189,189));
+            UIManager.put("Panel.background",new ColorUIResource(189,189,189));
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            fd.getContentPane().setBackground(new Color(189,189,189));
+
             fd.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
             Object[] options = {"Easy", "Medium", "Hard"};
             dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
@@ -91,7 +100,8 @@ public class  menu extends JFrame{
                 null,
                 options, 
                 options[1] );
-
+            //easy = 0, medium = 1 & hard = 2 
+            //"difficulty" just determines size of field
             if (dif == 0) {
              rows = 8;
              difficulty = "Easy";
@@ -101,9 +111,10 @@ public class  menu extends JFrame{
                 difficulty = "Medium";
             }
             else if (dif == 2) {
-                rows = 14;
+                rows = 16;
                 difficulty = "Hard";
             }
+            //grid is wider than it is tall
             columns = (rows + 4);
     
         }

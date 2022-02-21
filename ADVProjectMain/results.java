@@ -1,5 +1,11 @@
 public class results {
-    String name = menu.name;
-    int score = grid.score;
-    String dif = menu.difficulty;
+    String name;
+    int score;
+    String dif;
+
+    public results(String name, int score, String diff) {
+        this.name = name;
+        this.score = score;
+        this.dif = diff;
+    }
 }

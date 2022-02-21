@@ -24,8 +24,12 @@ public class mineRead {
                 int time = rs.getInt("TimeWon");
                 String difficulty = rs.getString("Difficulty");
                 
+                for (int i = 0; i < count; i++) {
+                    resultArr[i].name  = name;
+                    resultArr[i].score  = time;
+                    resultArr[i].dif = difficulty;
+                }
 
-                System.out.println(name + " " + time + " " + difficulty + " " + count);
 
             }
             if (stmt != null) {
