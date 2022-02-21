@@ -136,12 +136,6 @@ public class grid {
             public void actionPerformed(ActionEvent e) {
                 new grid();
                 run = false;
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
                 f.dispose();
                 fw.dispose();
                 fl.dispose();
@@ -599,12 +593,21 @@ public class grid {
                                 //the flaggedM counter is not incremented as a mine has not been flagged, win condition can only be met by correctly flagging mines
                                 if (flagged[I][J] == true) {
                                     flagged[I][J] = false;
+                                    if(clicked[I][J] < 1) {
+                                        try {
+                                            Image img = ImageIO.read(getClass().getResource("X.png"));
+                                            buttons[I][J].setIcon(new ImageIcon(img));
+                                        } catch (Exception ex) {
+                                            System.out.println(ex);
+                                        }
+                                    } else {
                                     try {
                                         Image img = ImageIO.read(getClass().getResource(count[I][J] + ".png"));
                                         buttons[I][J].setIcon(new ImageIcon(img));
                                     } catch (Exception ex) {
                                         System.out.println(ex);
                                     }
+                                }
                                     //if it isnt already flagged, flag it
                                 } else {
                                     flagged[I][J] = true;

@@ -1,10 +1,9 @@
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-
 import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
 import javax.imageio.*;
+import javax.swing.plaf.ColorUIResource;
 
 
 public class  menu extends JFrame{
@@ -74,32 +73,33 @@ public class  menu extends JFrame{
                         }  
                     });  
             fn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            fn.setLocationRelativeTo(null);
-            
+            fn.setResizable(false);
             fn.add(tf);
             fn.add(l);
             fn.add(b);
             fn.setSize(200,165);
             fn.setVisible(true);
-            
+            fn.setLocationRelativeTo(null);
         }
     }
     public class diff {
         public diff() {
             int dif;
+            ImageIcon img = new ImageIcon("9.png");
             JFrame fd = new JFrame();
             UIManager.put("OptionPane.background",new ColorUIResource(189,189,189));
             UIManager.put("Panel.background",new ColorUIResource(189,189,189));
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            fd.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
+           
             Object[] options = {"Easy", "Medium", "Hard"};
             dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                img,
                 options, 
                 options[1] );
+            fd.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
             //easy = 0, medium = 1 & hard = 2 
             //"difficulty" just determines size of field
             if (dif == 0) {
