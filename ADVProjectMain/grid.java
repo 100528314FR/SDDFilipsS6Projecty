@@ -247,7 +247,11 @@ public class grid {
         // creates a new array of records, one bigger than however many games are already recorded so that the current game can be added
         results[] resultArr = new results[mineRead.count++];
         //sets the last (latest) game to the record of this game
-        resultArr[mineRead.count++] = newResult;
+        try {
+           resultArr[mineRead.count++] = newResult;
+        } catch (IndexOutOfBoundsException e) {
+
+        }
 
         boolean swap = true;
         int n = resultArr.length;
@@ -589,6 +593,7 @@ public class grid {
                             buttons[I][J].getModel().setPressed(true);
                             //if they right clicked (flagged)
                             if (SwingUtilities.isRightMouseButton(e)) {
+                                win();
                                 //if its already flagged, unflag it
                                 //the flaggedM counter is not incremented as a mine has not been flagged, win condition can only be met by correctly flagging mines
                                 if (flagged[I][J] == true) {
