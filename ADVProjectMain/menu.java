@@ -56,19 +56,19 @@ public class  menu extends JFrame{
             b.addActionListener(new ActionListener(){  
                 //when the confirm button is clicked
                 public void actionPerformed(ActionEvent e){  
-                            //a fodder string is set to the text input
+                            //a fodder string is set to the text input in order to validate string
                             String test = tf.getText(); 
                             //if something has been input
-                            if (test.length() > 0) {
+                            if (test.length() < 1 || test.matches(".*[!£$%^&*()_+-=//[//]{}'#@~,.<>;:/?`¬].*")) {
+                                //if the test string is empty (length < 0) or has any special characters, tell the player to input a valid name
+                                fn.add(l1);
+                                fn.pack();
+                                fn.setSize(200,165);
+                            } else {
                                 //set the name to the test, which is what was input
                                 name = test;
                                 new grid();
                                 fn.dispose();
-                            } else {
-                                //if the test string is empty (length < 0), tell the player to input a valid name
-                                fn.add(l1);
-                                fn.pack();
-                                fn.setSize(200,165);
                             }
                         }  
                     });  

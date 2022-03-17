@@ -593,7 +593,7 @@ public class grid {
                             buttons[I][J].getModel().setPressed(true);
                             //if they right clicked (flagged)
                             if (SwingUtilities.isRightMouseButton(e)) {
-                                win();
+                                //win();
                                 //if its already flagged, unflag it
                                 //the flaggedM counter is not incremented as a mine has not been flagged, win condition can only be met by correctly flagging mines
                                 if (flagged[I][J] == true) {
