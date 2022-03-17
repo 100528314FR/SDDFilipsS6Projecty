@@ -7,6 +7,7 @@ import javax.swing.plaf.ColorUIResource;
 
 
 public class  menu extends JFrame{
+    //assigns a value for rows to allow for exiting before a difficulty is chosen
     static int rows = 1;
     static int columns;
     static String name;
@@ -22,7 +23,9 @@ public class  menu extends JFrame{
         }
     }
     public class name extends Frame {
+        //method for getting a name
         public name() {
+            //gui
             JFrame fn = new JFrame();
             JLabel l = new JLabel("Enter your name:");
             JLabel l1 = new JLabel("Enter a valid name");
@@ -56,22 +59,23 @@ public class  menu extends JFrame{
             b.addActionListener(new ActionListener(){  
                 //when the confirm button is clicked
                 public void actionPerformed(ActionEvent e){  
-                            //a fodder string is set to the text input in order to validate string
+                            //a string is set to the text input in order to validate string
                             String test = tf.getText(); 
-                            //if something has been input
                             if (test.length() < 1 || test.matches(".*[!£$%^&*()_+-=//[//]{}'#@~,.<>;:/?`¬].*")) {
-                                //if the test string is empty (length < 0) or has any special characters, tell the player to input a valid name
+                                //if the test string is empty (length < 1) or has any special characters, tell the player to input a valid name
                                 fn.add(l1);
                                 fn.pack();
                                 fn.setSize(200,165);
                             } else {
-                                //set the name to the test, which is what was input
+                                //if validation is passed, set the name to the test, which is what was input
                                 name = test;
+                                //all pre-game infor has been collected at this point, so closes current name window and calls main game method
                                 new grid();
                                 fn.dispose();
                             }
                         }  
                     });  
+                    //more gui
             fn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             fn.setResizable(false);
             fn.add(tf);
@@ -83,15 +87,16 @@ public class  menu extends JFrame{
         }
     }
     public class diff {
+        //method for determining difficulty (size of field)
         public diff() {
+            //an int (0-2) determined by option panel
             int dif;
+            //gui
             ImageIcon img = new ImageIcon("9.png");
             JFrame fd = new JFrame();
             UIManager.put("OptionPane.background",new ColorUIResource(189,189,189));
             UIManager.put("Panel.background",new ColorUIResource(189,189,189));
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-           
             Object[] options = {"Easy", "Medium", "Hard"};
             dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
                 JOptionPane.YES_NO_CANCEL_OPTION,
@@ -101,7 +106,7 @@ public class  menu extends JFrame{
                 options[1] );
             fd.getRootPane().setBorder(BorderFactory.createRaisedBevelBorder());
             //easy = 0, medium = 1 & hard = 2 
-            //"difficulty" just determines size of field
+            //the difficulty string is used in game record in database
             if (dif == 0) {
              rows = 8;
              difficulty = "Easy";
