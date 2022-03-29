@@ -224,7 +224,7 @@ public class grid {
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
-                } else if (minef[i][j] == 9 && flagged[i][j]) {
+                }  else if (minef[i][j] == 9 && flagged[i][j]) {
                     // used to make sure the correctly flagged mines remain flagged after previous
                     // check
                     try {
@@ -233,7 +233,7 @@ public class grid {
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }
-                }
+                } 
             }
         }
     }
@@ -248,18 +248,21 @@ public class grid {
         results temp = new results(null, 0, null);
         // creates a new array of records, one bigger than however many games are
         // already recorded so that the current game can be added
-        results[] resultArr = new results[mineRead.count++];
+        results[] resultArra = mineRead.resultArr;
         // sets the last (latest) game to the record of this game
         try {
-            resultArr[mineRead.count++] = newResult;
+            resultArra[mineRead.count++] = newResult;
         } catch (IndexOutOfBoundsException e) {
 
+        }
+        for(int i = 0; i < resultArra.length; i++) {
+            System.out.println(resultArra[i].name + ", " + resultArra[i].score + ", " + resultArra[i].dif);
         }
         // bubble sort for array of records (time ascending)
         boolean swap = true;
         // array length is stored as seperate int in order to reduce times looped
         // through, as largest value will have already 'bubbles' to the top
-        int n = resultArr.length;
+        int n = resultArra.length;
         // while the last loop moved a number
         while (swap && n >= 0) {
             // for each in array up to 3rd last (because it checks the number in the next
@@ -268,11 +271,11 @@ public class grid {
                 // assume there are been no swap
                 swap = false;
                 // if the current time is bigger than the next one
-                if (resultArr[i].score > resultArr[i + 1].score) {
+                if (resultArra[i].score > resultArra[i + 1].score) {
                     // swap them
-                    temp = resultArr[i];
-                    resultArr[i] = resultArr[i + 1];
-                    resultArr[i + 1] = temp;
+                    temp = resultArra[i];
+                    resultArra[i] = resultArra[i + 1];
+                    resultArra[i + 1] = temp;
                     // there has been a swap
                     swap = true;
                 }
@@ -335,7 +338,7 @@ public class grid {
                 // generate a random real number 0 to 1.0 (r)
                 r = rand.nextDouble();
                 // a 15% chance that any given tiles becomes a mine
-                if (r <= 0.15) {
+                if (r <= 0.05) {
                     m = 9;
                     // count the mines for win condition
                     numMines++;

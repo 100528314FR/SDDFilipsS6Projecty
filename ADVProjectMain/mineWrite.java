@@ -21,6 +21,7 @@ public class mineWrite {
          stmt = conn.createStatement();
          System.out.println("I am connected");
          stmt.executeQuery(query);
+         System.out.println(name + ", " + time + ", " + diff);
 
          if (stmt != null) {
             stmt.close();

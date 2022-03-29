@@ -9,29 +9,29 @@ public class mineRead {
     String pass = "100528614";
     Statement stmt = null;
     results newResult = null;
-    int i = 0;
-    results[] resultArr = new results[count];
+    int i = 1;
+    static results[] resultArr = new results[50];
             
 
     public mineRead() {
 
-        String query = "SELECT Name, TimeWon, Difficulty, COUNT(Name) FROM frudnicki_minesweeper";
+        String query = "SELECT Name, TimeWon, Difficulty FROM frudnicki_minesweeper";
+        String countQ = "SELECT COUNT(Name) FROM frudnicki_minesweeper";
         try {
             Connection conn = DriverManager.getConnection(database, user, pass);
             stmt = conn.createStatement();
+
             System.out.println("I am connected");
             ResultSet rs = stmt.executeQuery(query);
-            
+            ResultSet rs1 = stmt.executeQuery(countQ);
+            int count = rs1.getInt("COUNT(Name)");
+            System.out.println(count);
             
             while (rs.next()) {
                 String name = rs.getString("Name");
                 int time = rs.getInt("TimeWon");
                 String difficulty = rs.getString("Difficulty");
-                int count = rs.getInt("COUNT(Name)");
-                System.out.println(count);
-
                 
-
                     System.out.println(name + time + difficulty);
                     newResult = new results(name, time, difficulty);
                     resultArr[i] = newResult;
