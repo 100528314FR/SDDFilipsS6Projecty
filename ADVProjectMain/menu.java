@@ -89,15 +89,26 @@ public class  menu extends JFrame{
     public class diff {
         //method for determining difficulty (size of field)
         public diff() {
+            try {
+                font = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("font.ttf"));
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(font);
+            } catch (IOException|FontFormatException e) {
+                e.printStackTrace();
+            }
             //an int (0-2) determined by option panel
             int dif;
             //gui
             ImageIcon img = new ImageIcon("9.png");
             JFrame fd = new JFrame();
             UIManager.put("OptionPane.background",new ColorUIResource(189,189,189));
+            UIManager.put("OptionPane.border", BorderFactory.createRaisedBevelBorder());
+            UIManager.put("OptionPane.messageFont", font.deriveFont(Font.PLAIN, 10f));
+            UIManager.put("OptionPane.buttonFont", font.deriveFont(Font.PLAIN, 8f));
             UIManager.put("Panel.background",new ColorUIResource(189,189,189));
             fd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             Object[] options = {"Easy", "Medium", "Hard"};
+            
             dif = JOptionPane.showOptionDialog(fd, "Select a difficulty", "Difficulty",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
