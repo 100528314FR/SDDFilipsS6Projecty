@@ -23,6 +23,7 @@ public class grid {
     static int score = 0;
     int firstClick = 0;
 
+
     // gui components
     JFrame f = new JFrame();
     JFrame fl = new JFrame();
@@ -239,24 +240,28 @@ public class grid {
     }
 
     public void win() {
+        // converting the final values of the time array when the game ends into an
+        // equivaltent int for storage in database
+        for (int i = 0; i < 3; i++) {
+            score = (score * 10) + sec[i];
+        }
         // read the database
+        new mineWrite();
         new mineRead();
         // creates a new result record wiht the values from this game (name, time/score
         // and difficulty)
-        results newResult = new results(name, score, dif);
+        //results newResult = new results(name, score, dif);
         // a fodder record for sorting
         results temp = new results(null, 0, null);
         // creates a new array of records, one bigger than however many games are
         // already recorded so that the current game can be added
-        results[] resultArra = mineRead.resultArr;
+        results[] resultArra = mineRead.readDatabase();
         // sets the last (latest) game to the record of this game
-        try {
-            resultArra[mineRead.count++] = newResult;
-        } catch (IndexOutOfBoundsException e) {
+        //resultArra[resultArra.length-1] = newResult;
 
-        }
         for(int i = 0; i < resultArra.length; i++) {
-            System.out.println(resultArra[i].name + ", " + resultArra[i].score + ", " + resultArra[i].dif);
+
+            System.out.println("Before: " + resultArra[i].name + ", " + resultArra[i].score + ", " + resultArra[i].dif);
         }
         // bubble sort for array of records (time ascending)
         boolean swap = true;
@@ -283,15 +288,13 @@ public class grid {
             // no longer need to check last index as we know its the biggest
             n--;
         }
+        for (results i:resultArra)
+        System.out.println("After: " + i.name + ", " + i.score + ", " + i.dif);
         // stop timer
         run = false;
-        // converting the final values of the time array when the game ends into an
-        // equivaltent int for storage in database
-        for (int i = 0; i < 3; i++) {
-            score = (score * 10) + sec[i];
-        }
+       
         // write the winning game to database
-        new mineWrite();
+        
         // win window gui
         JLabel l = new JLabel("YOU WIN");
         fw.setLayout(null);
@@ -338,7 +341,7 @@ public class grid {
                 // generate a random real number 0 to 1.0 (r)
                 r = rand.nextDouble();
                 // a 15% chance that any given tiles becomes a mine
-                if (r <= 0.05) {
+                if (r <= 0.01) {
                     m = 9;
                     // count the mines for win condition
                     numMines++;
