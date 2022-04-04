@@ -24,7 +24,7 @@ public class mineRead {
          if (rs1.next()){
          count = rs1.getInt("COUNT(Name)");
          }
-         System.out.println(count);
+         //System.out.println(count);
          noScores = count;
         } catch (SQLException err) {
             System.out.println(":)" + err.getMessage());
@@ -64,11 +64,6 @@ public class mineRead {
             System.out.println(":(" + err.getMessage());
         }
         return resultArr;
-    }
-
-    public static void howMany() {
-      
-
     }
     public static void main(String[] args) {
     new mineRead();

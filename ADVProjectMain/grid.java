@@ -192,36 +192,6 @@ public class grid {
         infoP.setBackground(new Color(189, 189, 189));
     }
 
-    public void bubbleSort(results[] arra) {
-        
-        // a fodder record for sorting
-        results temp = new results(null, 0, null);
-        // bubble sort for array of records (time ascending)
-        boolean swap = true;
-        // array length is stored as seperate int in order to reduce times looped
-        // through, as largest value will have already 'bubbles' to the top
-        int n = arra.length;
-        // while the last loop moved a number
-        while (swap && n >= 0) {
-            // for each in array up to 3rd last (because it checks the number in the next
-            // index, so checking last two is pointless)
-            for (int i = 0; i < n - 2; i++) {
-                // assume there are been no swap
-                swap = false;
-                // if the current time is bigger than the next one
-                if (arra[i].score > arra[i + 1].score) {
-                    // swap them
-                    temp = arra[i];
-                    arra[i] = arra[i + 1];
-                    arra[i + 1] = temp;
-                    // there has been a swap
-                    swap = true;
-                }
-            }
-            // no longer need to check last index as we know its the biggest
-            n--;
-        }
-    }
     public void gameOver() {
         // stop the timer
         run = false;
@@ -270,34 +240,61 @@ public class grid {
     }
 
     public void win() {
-        // stop timer
-        run = false;
         // converting the final values of the time array when the game ends into an
         // equivaltent int for storage in database
         for (int i = 0; i < 3; i++) {
             score = (score * 10) + sec[i];
         }
-        // write the current game to the database
-        new mineWrite();
         // read the database
+        new mineWrite();
         new mineRead();
-        // creates a new array of records
-        // it will be the exact same array as the one created in mineRead
+        // creates a new result record wiht the values from this game (name, time/score
+        // and difficulty)
+        //results newResult = new results(name, score, dif);
+        // a fodder record for sorting
+        results temp = new results(null, 0, null);
+        // creates a new array of records, one bigger than however many games are
+        // already recorded so that the current game can be added
         results[] resultArra = mineRead.readDatabase();
+        // sets the last (latest) game to the record of this game
+        //resultArra[resultArra.length-1] = newResult;
 
         for(int i = 0; i < resultArra.length; i++) {
+
             System.out.println("Before: " + resultArra[i].name + ", " + resultArra[i].score + ", " + resultArra[i].dif);
-        } 
-        
-        //call the bubble sort method to sort the resultArra array
-        bubbleSort(resultArra);
-    
-        // print the sorted array
-        for (results i:resultArra) {
-            System.out.println("After: " + i.name + ", " + i.score + ", " + i.dif);
         }
+        // bubble sort for array of records (time ascending)
+        boolean swap = true;
+        // array length is stored as seperate int in order to reduce times looped
+        // through, as largest value will have already 'bubbles' to the top
+        int n = resultArra.length;
+        // while the last loop moved a number
+        while (swap && n >= 0) {
+            // for each in array up to 3rd last (because it checks the number in the next
+            // index, so checking last two is pointless)
+            for (int i = 0; i < n - 2; i++) {
+                // assume there are been no swap
+                swap = false;
+                // if the current time is bigger than the next one
+                if (resultArra[i].score > resultArra[i + 1].score) {
+                    // swap them
+                    temp = resultArra[i];
+                    resultArra[i] = resultArra[i + 1];
+                    resultArra[i + 1] = temp;
+                    // there has been a swap
+                    swap = true;
+                }
+            }
+            // no longer need to check last index as we know its the biggest
+            n--;
+        }
+        for (results i:resultArra)
+        System.out.println("After: " + i.name + ", " + i.score + ", " + i.dif);
+        // stop timer
+        run = false;
+       
+        // write the winning game to database
         
-    
         // win window gui
         JLabel l = new JLabel("YOU WIN");
         fw.setLayout(null);
